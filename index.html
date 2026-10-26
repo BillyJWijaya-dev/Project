@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SOLIDARITY — Different Minds, One Connection</title>
+    <link rel="icon" href="assets/images/solidarity.jpeg">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="top">
+        <a href="#hero" class="brand"><img src="assets/images/solidarity.jpeg" alt="">SOLIDARITY</a>
+        <nav>
+            <a href="#about">tentang</a>
+            <a href="#people">anggota</a>
+            <a href="#gallery">galeri</a>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="bg" id="heroBg"></div>
+        <div class="hero-in">
+            <p class="mono">// lingkaran mahasiswa Sistem Informasi</p>
+            <h1>Different Minds,<br>One Connection.</h1>
+            <a class="btn" href="#people">Kenalan dulu →</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="wrap two">
+            <div>
+                <p class="mono">01 / tentang</p>
+                <h2>Kami cuma sekumpulan anak SI yang kebetulan sefrekuensi.</h2>
+            </div>
+            <div class="prose">
+                <p>SOLIDARITY lahir dari kelas SI26A dibuat pertama kali oleh Faris. Tujuan dibuat lingkaran pertemanan
+                    ini adalah untuk mengerjakan tugas bersama, belajar, mengenal satu sama lain, dan membangun potensi
+                    diri sebagai mahasiswa Sistem Informasi. Isinya
+                    orang-orang dengan cara berpikir berbeda: ada yang rapi, ada yang asal jalan dulu, ada yang jago
+                    ngoding.</p>
+                <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang. Kami welcome
+                    kepada semua orang asalkan orang itu punya value. Kucing di
+                    logo itu? Dia senyum karena kodenya akhirnya jalan.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="people">
+        <div class="wrap">
+            <p class="mono">02 / anggota</p>
+            <div class="people-head">
+                <h2>Orang-orangnya</h2>
+                <div class="ctrl">
+                    <button id="prev" aria-label="Sebelumnya">←</button>
+                    <span class="mono" id="count">1 / 1</span>
+                    <button id="next" aria-label="Berikutnya">→</button>
+                </div>
+            </div>
+
+            <article class="card" id="card">
+                <div class="photo"><img id="mPhoto" alt=""></div>
+                <div class="info">
+                    <h3 id="mName"></h3>
+                    <p class="role mono" id="mRole"></p>
+                    <p id="mBio"></p>
+
+                    <h4 class="mono">bahasa pemrograman</h4>
+                    <ul class="tags" id="mLang"></ul>
+
+                    <h4 class="mono">hobi</h4>
+                    <ul class="tags alt" id="mHobby"></ul>
+
+                    <div class="player">
+                        <button id="playBtn" aria-label="Putar/jeda">▶</button>
+                        <div><b id="mSong"></b><span class="mono" id="mArtist"></span></div>
+                        <audio id="audio" preload="none"></audio>
+                    </div>
+                    <p class="note mono" id="note">klik di mana saja sekali supaya lagu bisa otomatis diputar</p>
+                </div>
+            </article>
+            <div class="dots" id="dots"></div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="wrap">
+            <p class="mono">03 / galeri</p>
+            <div class="people-head">
+                <h2>Momen kami</h2>
+                <label class="btn" for="upload">+ Upload foto</label>
+                <input type="file" id="upload" accept="image/*" multiple hidden>
+            </div>
+            <div class="grid" id="grid"></div>
+        </div>
+    </section>
+
+    <footer>
+        <img src="assets/images/solidarity.jpeg" alt="">
+        <p class="mono">SOLIDARITY · Sistem Informasi · dibuat bareng-bareng</p>
+    </footer>
+
+    <div class="lightbox" id="lb"><img alt=""></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
