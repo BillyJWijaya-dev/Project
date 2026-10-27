@@ -26,9 +26,9 @@
     <section id="hero">
         <div class="bg" id="heroBg"></div>
         <div class="hero-in">
-            <p class="mono">// Kelompok mahasiswa Sistem Informasi</p>
+            <p class="mono">// Sekumpulan mahasiswa Sistem Informasi</p>
             <h1>Different Minds,<br>One Connection.</h1>
-            <a class="btn" href="#people">Kenalan dulu →</a>
+            <a class="btn" href="#people">Meet Our People →</a>
         </div>
     </section>
 
@@ -41,21 +41,19 @@
             <div class="prose">
                 <p>SOLIDARITY lahir dari kelas SI26A dibuat pertama kali oleh Faris. Tujuan dibuat lingkaran pertemanan
                     ini adalah untuk mengerjakan tugas bersama, belajar, mengenal satu sama lain, dan membangun potensi
-                    diri sebagai mahasiswa Sistem Informasi. Isinya
-                    orang-orang dengan cara berpikir berbeda: ada yang rapi, ada yang asal jalan dulu, ada yang jago
-                    ngoding.</p>
+                    diri sebagai mahasiswa Sistem Informasi.</p>
                 <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang. Kami welcome
-                    kepada semua orang asalkan orang itu punya value. Kucing di
-                    logo itu? Dia senyum karena kodenya akhirnya jalan.</p>
+                    kepada semua orang asalkan orang itu punya value.</p>
             </div>
         </div>
     </section>
 
     <section id="people">
+        <img class="dock" id="dock" src="assets/images/JESTER.jpeg" alt="Logo SOLIDARITY" title="Putar ulang intro">
         <div class="wrap">
             <p class="mono">02 / anggota</p>
             <div class="people-head">
-                <h2>Member</h2>
+                <h2>Membernya</h2>
                 <div class="ctrl">
                     <button id="prev" aria-label="Sebelumnya">←</button>
                     <span class="mono" id="count">1 / 1</span>
@@ -64,7 +62,14 @@
             </div>
 
             <article class="card" id="card">
-                <div class="photo"><img id="mPhoto" alt=""></div>
+                <div class="stage">
+                    <div class="pcard" id="pcard">
+                        <span class="corner tl"><b class="rk"></b><i class="st"></i></span>
+                        <span class="corner br"><b class="rk"></b><i class="st"></i></span>
+                        <span class="pmark" id="pmark"></span>
+                        <div class="pframe" id="pframe"><img id="mPhoto" alt=""></div>
+                    </div>
+                </div>
                 <div class="info">
                     <h3 id="mName"></h3>
                     <p class="role mono" id="mRole"></p>
@@ -106,6 +111,8 @@
     </footer>
 
     <div class="lightbox" id="lb"><img alt=""></div>
+    <div id="intro" aria-hidden="true"><img src="assets/images/JESTER.jpeg" alt=""></div>
+    <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
     <script src="script.js"></script>
 </body>
 
