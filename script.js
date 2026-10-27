@@ -1,5 +1,6 @@
 // Foto hero (berganti otomatis).
 const heroPhotos = [
+    "assets/images/solidarity.jpeg"
     "assets/galeri/1.jpeg",
     "assets/galeri/2.jpeg",
     "assets/galeri/3.jpeg",
@@ -17,7 +18,7 @@ const members = [
     {
         name: "Zen Auladi", role: "Sepuh",
         bio: "Bukan orang bener, tapi beneran orang.",
-        langs: ["Python", "PHP"],
+        langs: ["PYTHON", "PHP"],
         hobbies: ["Ngoding", "Mobil", "Musik"],
         photo: "assets/images/Zen.jpeg",
         song: "assets/audio/zenxi.mp3", title: "Bintang 5", artist: "Tenxi"
