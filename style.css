@@ -58,6 +58,7 @@ h2 {
     margin-top: 10px
 }
 
+/* header */
 .top {
     position: fixed;
     inset: 0 0 auto;
@@ -98,56 +99,6 @@ nav a:hover {
     text-underline-offset: 5px
 }
 
-#hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-end;
-    padding: 0;
-    border: 0;
-    overflow: hidden
-}
-
-.bg {
-    position: absolute;
-    inset: 0;
-    background: var(--ink)
-}
-
-.bg div {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.6s
-}
-
-.bg div.on {
-    opacity: .45
-}
-
-#hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--navy) 5%, transparent 70%)
-}
-
-.hero-in {
-    position: relative;
-    z-index: 2;
-    max-width: 1080px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 24px 80px
-}
-
-h1 {
-    font-size: clamp(2.8rem, 9vw, 6.4rem);
-    margin: 14px 0 30px
-}
-
 .btn {
     display: inline-block;
     border: 1px solid var(--white);
@@ -165,6 +116,252 @@ h1 {
     color: var(--navy)
 }
 
+.btn.small {
+    padding: 8px 16px;
+    font-size: .78rem
+}
+
+/* ===== hero: poster raksasa + kartu dibagikan ===== */
+#hero {
+    --w: clamp(64px, 11vw, 140px);
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: stretch;
+    padding: 76px 0 0;
+    border: 0;
+    overflow: hidden;
+    background: var(--navy)
+}
+
+.hero-in {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+    text-align: center
+}
+
+#hero h1 {
+    margin: 0;
+    padding: 12px 24px 0;
+    font-size: clamp(1.5rem, 3.6vw, 2.6rem)
+}
+
+/* kartu dibagikan */
+.deal {
+    position: relative;
+    height: calc(var(--w) * 2.4)
+}
+
+.dcard {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--w);
+    aspect-ratio: 5/7;
+    margin: calc(var(--w) * -.7) 0 0 calc(var(--w) * -.5);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    z-index: var(--i);
+    --x: calc(var(--t) * var(--w) * .55);
+    --y: calc(var(--t) * var(--t) * var(--w) * .045 - var(--w) * .3);
+    --a: calc(var(--t) * 8deg);
+    transform: translate(var(--x), var(--y)) rotate(var(--a));
+    transition: transform .25s;
+    animation: deal .9s cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(var(--d) * .11s + .4s)
+}
+
+.dcard:hover,
+.dcard:focus-visible {
+    transform: translate(var(--x), calc(var(--y) - 22px)) rotate(var(--a));
+    z-index: 30;
+    outline: none
+}
+
+.dcard:focus-visible .dfront {
+    outline: 2px solid var(--soft);
+    outline-offset: 3px
+}
+
+.dflip {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    animation: flip .7s ease-out backwards;
+    animation-delay: calc(var(--d) * .11s + .55s)
+}
+
+.dfront,
+.dback {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--ink)
+}
+
+.dfront {
+    box-shadow: -3px 3px 0 rgba(0, 0, 0, .25)
+}
+
+.dfront img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block
+}
+
+.hc {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    background: var(--white);
+    color: var(--navy);
+    font: 800 .62rem/1 'Archivo', sans-serif;
+    padding: 2px 3px;
+    border-radius: 3px
+}
+
+.dfront .hc {
+    font-size: clamp(.62rem, 1.1vw, .9rem);
+    padding: 3px 4px
+}
+
+.dcard.red .hc,
+.hcard.red .hc {
+    color: #b3263e
+}
+
+.dback {
+    transform: rotateY(180deg);
+    display: grid;
+    place-items: center;
+    background: var(--navy2) repeating-linear-gradient(45deg, transparent 0 8px, rgba(169, 189, 224, .1) 8px 9px)
+}
+
+.dback img {
+    width: 46%;
+    aspect-ratio: 1;
+    object-fit: cover
+}
+
+@keyframes deal {
+    from {
+        transform: translate(0, 0) rotate(0deg)
+    }
+}
+
+@keyframes flip {
+    from {
+        transform: perspective(800px) rotateY(180deg)
+    }
+
+    to {
+        transform: perspective(800px) rotateY(0deg)
+    }
+}
+
+/* tulisan raksasa + logo di tengah */
+.mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .05em;
+    width: max-content;
+    margin: 0 auto;
+    font-weight: 800;
+    font-size: 13vw;
+    letter-spacing: -.045em;
+    line-height: .85;
+    padding-bottom: .04em;
+    white-space: nowrap
+}
+
+.mark img {
+    width: .72em;
+    height: .72em;
+    object-fit: cover;
+    flex: none
+}
+
+/* pita bahasa */
+.marq {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    padding: 12px 0
+}
+
+.track {
+    display: flex;
+    width: max-content;
+    animation: run 40s linear infinite
+}
+
+.marq:hover .track {
+    animation-play-state: paused
+}
+
+.track span {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    white-space: nowrap
+}
+
+.track i {
+    font-style: normal;
+    color: var(--soft)
+}
+
+@keyframes run {
+    to {
+        transform: translateX(-50%)
+    }
+}
+
+/* baris angka */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr)
+}
+
+.stats span {
+    padding: 14px 12px;
+    font-size: clamp(.9rem, 1.6vw, 1.1rem);
+    border-right: 1px solid var(--line)
+}
+
+.stats span:last-child {
+    border-right: 0
+}
+
+.stats b {
+    font-size: 1.5em;
+    font-weight: 800;
+    margin-right: .2em
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .dcard,
+    .dflip,
+    .track {
+        animation: none
+    }
+}
+
+/* tentang */
 .two {
     display: grid;
     grid-template-columns: 1fr 1.1fr;
@@ -207,6 +404,11 @@ h1 {
     color: var(--navy)
 }
 
+/* anggota */
+#people {
+    padding-top: 150px
+}
+
 .card {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -229,11 +431,6 @@ h1 {
 
 .role {
     margin: 4px 0 16px
-}
-
-.info h4 {
-    margin: 24px 0 8px;
-    font-weight: 400
 }
 
 .tags {
@@ -294,6 +491,7 @@ h1 {
     background: var(--white)
 }
 
+/* galeri */
 .grid {
     columns: 3 240px;
     column-gap: 14px
@@ -346,31 +544,13 @@ footer img {
     width: 44px
 }
 
-@media(max-width:760px) {
-
-    .two,
-    .card {
-        grid-template-columns: 1fr
-    }
-
-    .stage {
-        border-right: 0;
-        border-bottom: 1px solid var(--line)
-    }
-
-    nav a {
-        margin-left: 12px
-    }
-
-    section {
-        padding: 64px 0
-    }
-}
-
 /* kartu poker */
 .stage {
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     padding: 36px 28px;
     background: var(--ink);
     border-right: 1px solid var(--line);
@@ -379,17 +559,52 @@ footer img {
 
 .pcard {
     position: relative;
-    overflow: hidden;
-    background: var(--ink);
     width: min(250px, 100%);
     aspect-ratio: 5/7;
-    background: var(--white);
-    color: var(--navy);
     border-radius: 14px;
-    box-shadow: 7px 7px 0 rgba(169, 189, 224, .3)
+    box-shadow: 7px 7px 0 rgba(169, 189, 224, .3);
+    transform-style: preserve-3d;
+    transition: transform .15s ease-out;
+    cursor: pointer;
+    color: var(--navy)
 }
 
-.pcard::before {
+.pcard:focus-visible {
+    outline: 2px solid var(--soft);
+    outline-offset: 6px
+}
+
+.pcard.red .corner {
+    color: #b3263e
+}
+
+.hint {
+    font-size: .7rem;
+    opacity: .7
+}
+
+.pflip {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform .7s cubic-bezier(.4, .2, .2, 1)
+}
+
+.pflip.on {
+    transform: rotateY(180deg)
+}
+
+.face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--white)
+}
+
+.face::before {
     content: "";
     position: absolute;
     inset: 7px;
@@ -397,10 +612,6 @@ footer img {
     border: 1.5px var(--bs, solid) rgba(247, 248, 251, .8);
     border-radius: 9px;
     pointer-events: none
-}
-
-.pcard.red .corner {
-    color: #b3263e
 }
 
 .corner {
@@ -463,6 +674,34 @@ footer img {
     display: block
 }
 
+.back {
+    transform: rotateY(180deg);
+    background: var(--navy2) repeating-linear-gradient(45deg, transparent 0 10px, rgba(169, 189, 224, .08) 10px 11px);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 26px 20px;
+    text-align: center
+}
+
+.back .blogo {
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    margin-bottom: 4px
+}
+
+.back .tags {
+    justify-content: center
+}
+
+.back .mono {
+    margin-top: 8px
+}
+
 /* intro logo */
 #intro {
     position: fixed;
@@ -499,22 +738,180 @@ footer img {
     z-index: 3
 }
 
-@media(max-width:760px) {
+/* tangan kartu */
+.hand-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 40px;
+    padding-top: 34px;
+    overflow-x: clip
+}
+
+.hand {
+    display: flex;
+    justify-content: center
+}
+
+.hcard {
+    --w: clamp(56px, 11vw, 92px);
+    position: relative;
+    z-index: var(--z);
+    flex: none;
+    width: var(--w);
+    aspect-ratio: 5/7;
+    margin-left: calc(var(--w) * -.42);
+    padding: 0;
+    border: 2px solid var(--white);
+    background: var(--ink);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transform-origin: 50% 140%;
+    transform: rotate(var(--a));
+    transition: transform .25s, box-shadow .25s;
+    box-shadow: -3px 3px 0 rgba(0, 0, 0, .25)
+}
+
+.hcard:first-child {
+    margin-left: 0
+}
+
+.hcard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block
+}
+
+.hcard:hover {
+    transform: translateY(-16px) rotate(var(--a));
+    z-index: 30
+}
+
+.hcard.on {
+    transform: translateY(-26px) rotate(var(--a));
+    z-index: 20;
+    border-color: var(--soft);
+    box-shadow: 0 0 0 2px var(--soft)
+}
+
+/* dinding skill */
+.lead {
+    margin: 12px 0 32px;
+    max-width: 560px;
+    color: var(--soft)
+}
+
+.wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    border-left: 1px solid var(--line);
+    border-top: 1px solid var(--line)
+}
+
+.tile {
+    position: relative;
+    text-align: left;
+    padding: 16px 16px 24px;
+    background: none;
+    color: inherit;
+    border: 0;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    font: inherit
+}
+
+.tile b {
+    display: block;
+    font-size: 1.15rem;
+    line-height: 1.2
+}
+
+.tile span {
+    display: block;
+    margin-top: 4px
+}
+
+.tile i {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 5px;
+    background: var(--soft)
+}
+
+.tile:hover {
+    background: rgba(247, 248, 251, .07)
+}
+
+.tile.on {
+    background: var(--white);
+    color: var(--navy)
+}
+
+.tile.on span {
+    color: var(--navy)
+}
+
+.tile.on i {
+    background: var(--navy)
+}
+
+.who {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    min-height: 42px
+}
+
+.chip {
+    border: 1px solid var(--white);
+    background: none;
+    color: var(--white);
+    padding: 5px 12px;
+    font: .8rem 'JetBrains Mono', monospace;
+    cursor: pointer
+}
+
+.chip:hover {
+    background: var(--white);
+    color: var(--navy)
+}
+
+/* HP */
+@media (max-width: 760px) {
+
+    .two,
+    .card {
+        grid-template-columns: 1fr
+    }
+
+    .stage {
+        border-right: 0;
+        border-bottom: 1px solid var(--line)
+    }
+
+    nav a {
+        margin-left: 12px
+    }
+
+    section {
+        padding: 64px 0
+    }
+
+    #people {
+        padding-top: 136px
+    }
+
     .dock {
         left: 16px;
         top: 72px;
         width: 44px;
         height: 44px
-    }
-}
-
-/* ruang untuk logo di pojok kiri supaya tidak menimpa judul */
-#people {
-    padding-top: 150px
-}
-
-@media(max-width:760px) {
-    #people {
-        padding-top: 136px
     }
 }

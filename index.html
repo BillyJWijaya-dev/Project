@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SOLIDARITY — Different Minds, One Connection</title>
-    <link rel="icon" href="assets/images/jesterT.jpeg">
+    <link rel="icon" href="assets/images/JESTER.jpeg">
     <link
         href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
@@ -19,16 +19,27 @@
         <nav>
             <a href="#about">tentang</a>
             <a href="#people">anggota</a>
+            <a href="#skills">skill</a>
             <a href="#gallery">galeri</a>
         </nav>
     </header>
 
     <section id="hero">
-        <div class="bg" id="heroBg"></div>
         <div class="hero-in">
-            <p class="mono">// Sekumpulan mahasiswa Sistem Informasi</p>
             <h1>Different Minds,<br>One Connection.</h1>
-            <a class="btn" href="#people">Meet Our People →</a>
+
+            <div class="deal" id="deal"></div>
+
+            <p class="mark" id="mark" role="img" aria-label="SOLIDARITY">
+                <span aria-hidden="true">SOLID</span>
+                <img src="assets/images/jesterT.jpeg" alt="">
+                <span aria-hidden="true">ARITY</span>
+            </p>
+
+            <div class="marq" aria-hidden="true">
+                <div class="track" id="track"></div>
+            </div>
+            <p class="stats" id="stats"></p>
         </div>
     </section>
 
@@ -36,14 +47,14 @@
         <div class="wrap two">
             <div>
                 <p class="mono">01 / tentang</p>
-                <h2>Kami cuma sekumpulan anak SI yang kebetulan sefrekuensi.</h2>
+                <h2>Kami cuma sekumpulan anak SI yang kebetulan cocok.</h2>
             </div>
             <div class="prose">
                 <p>SOLIDARITY lahir dari kelas SI26A dibuat pertama kali oleh Faris. Tujuan dibuat lingkaran pertemanan
                     ini adalah untuk mengerjakan tugas bersama, belajar, mengenal satu sama lain, dan membangun potensi
                     diri sebagai mahasiswa Sistem Informasi.</p>
                 <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang. Kami welcome
-                    kepada semua orang asalkan orang itu punya value.</p>
+                    ke semua orang, tergantung bagaimana cara pandang anda kepada pertemanan kami.</p>
             </div>
         </div>
     </section>
@@ -53,7 +64,7 @@
         <div class="wrap">
             <p class="mono">02 / anggota</p>
             <div class="people-head">
-                <h2>Membernya</h2>
+                <h2>Anggota</h2>
                 <div class="ctrl">
                     <button id="prev" aria-label="Sebelumnya">←</button>
                     <span class="mono" id="count">1 / 1</span>
@@ -61,25 +72,36 @@
                 </div>
             </div>
 
+            <div class="hand-wrap">
+                <div class="hand" id="hand"></div>
+                <button class="btn small" id="draw">↻ Tarik kartu acak</button>
+            </div>
+
             <article class="card" id="card">
                 <div class="stage">
-                    <div class="pcard" id="pcard">
-                        <span class="corner tl"><b class="rk"></b><i class="st"></i></span>
-                        <span class="corner br"><b class="rk"></b><i class="st"></i></span>
-                        <span class="pmark" id="pmark"></span>
-                        <div class="pframe" id="pframe"><img id="mPhoto" alt=""></div>
+                    <div class="pcard" id="pcard" tabindex="0" role="button" aria-label="Balik kartu">
+                        <div class="pflip" id="pflip">
+                            <div class="face front">
+                                <span class="corner tl"><b class="rk"></b><i class="st"></i></span>
+                                <span class="corner br"><b class="rk"></b><i class="st"></i></span>
+                                <span class="pmark" id="pmark"></span>
+                                <div class="pframe" id="pframe"><img id="mPhoto" alt=""></div>
+                            </div>
+                            <div class="face back">
+                                <img class="blogo" src="assets/images/jesterT.jpeg" alt="">
+                                <p class="mono">bahasa pemrograman</p>
+                                <ul class="tags" id="mLang"></ul>
+                                <p class="mono">hobi</p>
+                                <ul class="tags alt" id="mHobby"></ul>
+                            </div>
+                        </div>
                     </div>
+                    <p class="hint mono">klik kartu untuk membalik</p>
                 </div>
                 <div class="info">
                     <h3 id="mName"></h3>
                     <p class="role mono" id="mRole"></p>
                     <p id="mBio"></p>
-
-                    <h4 class="mono">bahasa pemrograman</h4>
-                    <ul class="tags" id="mLang"></ul>
-
-                    <h4 class="mono">hobi</h4>
-                    <ul class="tags alt" id="mHobby"></ul>
 
                     <div class="player">
                         <button id="playBtn" aria-label="Putar/jeda">▶</button>
@@ -93,9 +115,20 @@
         </div>
     </section>
 
+    <section id="skills">
+        <div class="wrap">
+            <p class="mono">03 / skill</p>
+            <h2>Dinding skill</h2>
+            <p class="lead">Semua bahasa pemrograman yang dikuasai anggota, digabung jadi satu. Klik salah satu untuk
+                melihat siapa saja yang jago.</p>
+            <div class="wall" id="wall"></div>
+            <div class="who" id="who"></div>
+        </div>
+    </section>
+
     <section id="gallery">
         <div class="wrap">
-            <p class="mono">03 / galeri</p>
+            <p class="mono">04 / galeri</p>
             <div class="people-head">
                 <h2>Momen kami</h2>
                 <label class="btn" for="upload">+ Upload foto</label>
@@ -111,7 +144,7 @@
     </footer>
 
     <div class="lightbox" id="lb"><img alt=""></div>
-    <div id="intro" aria-hidden="true"><img src="assets/images/JESTER.jpeg" alt=""></div>
+    <div id="intro" aria-hidden="true"><img src="assets/images/jesterT.jpeg" alt=""></div>
     <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
     <script src="script.js"></script>
 </body>
