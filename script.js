@@ -1,6 +1,6 @@
 // Foto hero (berganti otomatis).
 const heroPhotos = [
-    "assets/images/solidarity.jpeg"
+    "assets/images/solidarity.jpeg",
     "assets/galeri/1.jpeg",
     "assets/galeri/2.jpeg",
     "assets/galeri/3.jpeg",
