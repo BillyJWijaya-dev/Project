@@ -1101,3 +1101,396 @@ footer .res {
     display: grid;
     place-items: center;
     background: var(--white);
+    color: var(--navy);
+    border-radius: 14px;
+    box-shadow: 8px 8px 0 rgba(169, 189, 224, .35);
+    animation: wildIn .95s cubic-bezier(.2, .9, .3, 1.15) both
+}
+
+.wild .jk img {
+    width: 68%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px
+}
+
+.wild .jk b {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-size: 1.05rem;
+    line-height: 1.1;
+    text-align: center
+}
+
+.wild .jk b.br {
+    top: auto;
+    left: auto;
+    bottom: 12px;
+    right: 14px;
+    transform: rotate(180deg)
+}
+
+@keyframes wildIn {
+    from {
+        transform: translateY(-110vh) rotate(-40deg)
+    }
+
+    60% {
+        transform: translateY(0) rotate(9deg)
+    }
+
+    to {
+        transform: translateY(0) rotate(-3deg)
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wild .jk {
+        animation: none;
+        transform: rotate(-3deg)
+    }
+}
+
+/* ===== tirai panggung ===== */
+#curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    cursor: pointer
+}
+
+#curtain.open {
+    pointer-events: none
+}
+
+.cp {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50.5%;
+    background-color: var(--navy2);
+    background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, .24) 0 3px, transparent 3px 42px), var(--harl);
+    background-size: auto, 34px;
+    transition: transform 1.5s cubic-bezier(.7, 0, .2, 1)
+}
+
+.cp.l {
+    left: 0;
+    border-right: 2px solid var(--white)
+}
+
+.cp.r {
+    right: 0;
+    border-left: 2px solid var(--white)
+}
+
+#curtain::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 12px;
+    background: var(--zig) repeat-x 0 0;
+    z-index: 2
+}
+
+#curtain.open .l {
+    transform: translateX(-102%)
+}
+
+#curtain.open .r {
+    transform: translateX(102%)
+}
+
+.ck {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    pointer-events: none;
+    transition: opacity .5s
+}
+
+.ck img {
+    width: min(150px, 36vw);
+    aspect-ratio: 1;
+    object-fit: cover;
+    animation: pulse 2.2s ease-in-out infinite
+}
+
+#curtain.open .ck {
+    opacity: 0
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.06)
+    }
+}
+
+/* tahan animasi hero sampai tirai terbuka */
+.wait .dcard,
+.wait .dflip {
+    animation-play-state: paused
+}
+
+/* ===== kabel logo -> kartu ===== */
+.cable {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible
+}
+
+.cable path {
+    fill: none;
+    stroke: rgba(169, 189, 224, .55);
+    stroke-width: 1;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: wire 1.4s ease-out forwards
+}
+
+.cable circle {
+    fill: var(--navy);
+    stroke: var(--white);
+    stroke-width: 1.2;
+    opacity: 0;
+    animation: pop .4s forwards
+}
+
+.cable.still path {
+    animation: none;
+    stroke-dashoffset: 0
+}
+
+.cable.still circle {
+    animation: none;
+    opacity: 1
+}
+
+@keyframes wire {
+    to {
+        stroke-dashoffset: 0
+    }
+}
+
+@keyframes pop {
+    to {
+        opacity: 1
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cable path {
+        animation: none;
+        stroke-dashoffset: 0
+    }
+
+    .cable circle {
+        animation: none;
+        opacity: 1
+    }
+}
+
+/* ===== tentang gaya README ===== */
+.readme {
+    border: 1px solid var(--line);
+    background: var(--ink);
+    font: .86rem/1.75 'JetBrains Mono', monospace
+}
+
+.readme .bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--soft);
+    font-size: .74rem
+}
+
+.readme .bar i {
+    width: 9px;
+    height: 9px;
+    border: 1px solid var(--soft);
+    display: inline-block
+}
+
+.readme .bar span {
+    margin-left: 8px
+}
+
+.readme .body {
+    padding: 18px 20px
+}
+
+.readme p,
+.readme li {
+    margin: 0
+}
+
+.readme .h {
+    margin-top: 16px;
+    color: var(--white);
+    font-weight: 700
+}
+
+.readme .h:first-child {
+    margin-top: 0
+}
+
+.readme .q {
+    color: var(--soft)
+}
+
+.readme ul {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+.readme li::before {
+    content: "- ";
+    color: var(--soft)
+}
+
+/* ===== dinding skill: diagram relasi ===== */
+.erd {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(44px, 14vw, 180px)
+}
+
+.erd .col {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.erd h4 {
+    margin: 0 0 2px;
+    font-weight: 400
+}
+
+.links {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible
+}
+
+.links path {
+    fill: none;
+    stroke: rgba(169, 189, 224, .3);
+    stroke-width: 1;
+    transition: stroke .25s, opacity .25s
+}
+
+.links circle {
+    fill: var(--navy);
+    stroke: var(--soft);
+    stroke-width: 1.2;
+    transition: opacity .25s
+}
+
+.links path.on {
+    stroke: var(--white);
+    stroke-width: 1.8
+}
+
+.links.focus path:not(.on),
+.links.focus circle:not(.on) {
+    opacity: .1
+}
+
+.nd {
+    min-width: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: var(--navy);
+    border: 1px solid var(--line);
+    color: var(--white);
+    font: .8rem 'JetBrains Mono', monospace;
+    text-align: left;
+    cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, opacity .2s
+}
+
+.nd .nm {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.nd i {
+    font-style: normal;
+    font-weight: 700
+}
+
+.nd.red i {
+    color: #d9475c
+}
+
+.nd small {
+    opacity: .7
+}
+
+.nd:hover {
+    border-color: var(--white)
+}
+
+.nd.rel {
+    border-color: var(--white);
+    box-shadow: inset 0 0 0 1px var(--white)
+}
+
+.nd.sel {
+    background: var(--white);
+    color: var(--navy);
+    border-color: var(--white)
+}
+
+.nd.sel.red i {
+    color: #b3263e
+}
+
+.nd.dim {
+    opacity: .35
+}
+
+/* tombol lonceng */
+.belltoggle {
+    position: fixed;
+    left: 14px;
+    bottom: 14px;
+    z-index: 60;
+    padding: 6px 10px;
+    background: var(--navy);
+    border: 1px solid var(--line);
+    color: var(--soft);
+    font-size: .68rem;
+    cursor: pointer
+}
+
+.belltoggle:hover {
+    color: var(--white);
+    border-color: var(--white)
+}

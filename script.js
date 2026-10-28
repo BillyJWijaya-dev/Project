@@ -397,4 +397,73 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
     });
 })();
 
-// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatikan -
+// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatikan ---
+let bellOn = true;
+try { bellOn = localStorage.getItem("bell") !== "off"; } catch { }
+let audioCtx;
+function ding(f = 1568, vol = .05) {
+    if (!bellOn) return;
+    try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const t = audioCtx.currentTime;
+        [[f, 1], [f * 1.5, .45], [f * 2.76, .2]].forEach(([fr, g]) => {
+            const o = audioCtx.createOscillator(), a = audioCtx.createGain();
+            o.type = "sine"; o.frequency.value = fr;
+            a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(vol * g, t + .006); a.gain.exponentialRampToValueAtTime(.0001, t + .9);
+            o.connect(a).connect(audioCtx.destination); o.start(t); o.stop(t + 1);
+        });
+    } catch { }
+}
+$("bell").textContent = "lonceng: " + (bellOn ? "on" : "off");
+$("bell").onclick = () => {
+    bellOn = !bellOn;
+    try { localStorage.setItem("bell", bellOn ? "on" : "off"); } catch { }
+    $("bell").textContent = "lonceng: " + (bellOn ? "on" : "off");
+    ding();
+};
+$("pcard").addEventListener("click", () => ding());
+
+// --- Kabel dari logo ke kartu yang dibagikan ---
+function drawCable(still) {
+    const hi = document.querySelector(".hero-in"), cab = $("cable"), logo = document.querySelector(".mark img"), deal = $("deal");
+    const H = hi.getBoundingClientRect(), L = logo.getBoundingClientRect(), D = deal.getBoundingClientRect();
+    cab.classList.toggle("still", !!still);
+    cab.setAttribute("viewBox", `0 0 ${H.width} ${H.height}`);
+    const x0 = L.left + L.width / 2 - H.left, y0 = L.bottom - H.top;
+    // posisi ujung atas tiap kartu dihitung dari rumus kipas (tidak bergantung animasi)
+    const pts = [...deal.querySelectorAll(".dcard")].map(c => {
+        const w = c.offsetWidth, t = parseFloat(c.style.getPropertyValue("--t")), a = t * 8 * Math.PI / 180;
+        const cx = D.left + D.width / 2 + t * w * .55 - H.left, cy = D.top + D.height / 2 + (t * t * .045 - .3) * w - H.top;
+        return [cx + .7 * w * Math.sin(a), cy - .7 * w * Math.cos(a) - 10];
+    });
+    const yb = y0 + (Math.min(...pts.map(p => p[1])) - y0) * .5;
+    cab.innerHTML = pts.map(([x, y], k) =>
+        `<path pathLength="1" d="M${x0} ${y0}V${yb}H${x}V${y}" style="animation-delay:${(.15 + k * .08).toFixed(2)}s"/>` +
+        `<circle cx="${x}" cy="${y}" r="3" style="animation-delay:${(1 + k * .08).toFixed(2)}s"/>`).join("") +
+        `<circle cx="${x0}" cy="${y0}" r="3.5" style="animation-delay:0s"/>`;
+}
+let cableTimer;
+addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTimeout(() => requestAnimationFrame(() => drawCable(true)), 150); });
+
+// --- Tirai panggung: terbuka saat klik (atau otomatis), sekali per sesi ---
+(() => {
+    const k = $("curtain"), body = document.body;
+    let seen = false;
+    try { seen = sessionStorage.getItem("curtain") === "1"; } catch { }
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const startHero = delay => setTimeout(() => requestAnimationFrame(() => drawCable(false)), delay);
+    if (seen || reduced) { k.remove(); body.classList.remove("wait"); startHero(1800); return; }
+    body.style.overflow = "hidden";
+    let done = false;
+    const open = () => {
+        if (done) return; done = true;
+        k.classList.add("open"); body.classList.remove("wait");
+        ding(1318); setTimeout(() => ding(1760), 200);
+        try { sessionStorage.setItem("curtain", "1"); } catch { }
+        startHero(2600);
+        setTimeout(() => { k.remove(); body.style.overflow = ""; }, 1700);
+    };
+    k.addEventListener("click", open);
+    addEventListener("keydown", open, { once: true });
+    setTimeout(open, 3500);
+})();
