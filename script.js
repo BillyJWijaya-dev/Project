@@ -311,23 +311,69 @@ $("draw").onclick = () => {
     pc.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pc.click(); } };
 })();
 
-// --- Dinding skill ---
+// --- Dinding skill: diagram relasi anggota <-> bahasa ---
 (() => {
     const list = [...skillMap.values()].sort((a, b) => b.who.length - a.who.length || a.name.localeCompare(b.name));
-    const max = list[0].who.length, wall = $("wall"), who = $("who");
-    const hint = '<span class="mono">← pilih salah satu bahasa</span>';
+    const erd = $("erd"), links = $("links"), who = $("who");
+    const hint = '<span class="mono">← pilih anggota atau bahasa untuk menyalakan garis hubungannya</span>';
+    const pairs = [];
+    list.forEach((s, k) => s.who.forEach(i => pairs.push([i, k])));
+    const mN = members.map((m, i) => {
+        const b = document.createElement("button");
+        b.className = "nd m" + ("♥♦".includes(m.card.suit) ? " red" : ""); b.dataset.i = i;
+        b.innerHTML = `<span class="nm"><i>${m.card.rank}${m.card.suit}</i> ${m.name}</span>`;
+        $("colM").append(b); return b;
+    });
+    const lN = list.map((s, k) => {
+        const b = document.createElement("button");
+        b.className = "nd l"; b.dataset.k = k;
+        b.innerHTML = `<span class="nm">${s.name}</span><small>${s.who.length}</small>`;
+        $("colL").append(b); return b;
+    });
+    let sel = null;
     who.innerHTML = hint;
-    wall.innerHTML = list.map((s, k) => `<button class="tile" data-k="${k}"><b>${s.name}</b><span class="mono">${s.who.length} orang</span><i style="width:${s.who.length / max * 100}%"></i></button>`).join("");
-    wall.onclick = e => {
-        const t = e.target.closest(".tile"); if (!t) return;
-        const was = t.classList.contains("on");
-        wall.querySelectorAll(".tile").forEach(x => x.classList.remove("on"));
-        if (was) { who.innerHTML = hint; return; }
-        t.classList.add("on");
-        const s = list[+t.dataset.k];
-        who.innerHTML = `<span class="mono">${s.name} dikuasai:</span>` + s.who.map(i => `<button class="chip" data-i="${i}">${members[i].card.rank}${members[i].card.suit} ${members[i].name}</button>`).join("");
+
+    function paint() {
+        const rel = sel ? pairs.filter(([i, k]) => sel.t === "m" ? i === sel.id : k === sel.id) : [];
+        const ri = new Set(rel.map(p => p[0])), rk = new Set(rel.map(p => p[1])), rs = new Set(rel.map(p => p.join("-")));
+        mN.forEach((b, i) => {
+            const me = !!sel && sel.t === "m" && sel.id === i;
+            b.classList.toggle("sel", me); b.classList.toggle("rel", ri.has(i) && !me); b.classList.toggle("dim", !!sel && !ri.has(i));
+        });
+        lN.forEach((b, k) => {
+            const me = !!sel && sel.t === "l" && sel.id === k;
+            b.classList.toggle("sel", me); b.classList.toggle("rel", rk.has(k) && !me); b.classList.toggle("dim", !!sel && !rk.has(k));
+        });
+        links.classList.toggle("focus", !!sel);
+        links.querySelectorAll("[data-p]").forEach(el => el.classList.toggle("on", rs.has(el.dataset.p)));
+        if (!sel) { who.innerHTML = hint; return; }
+        if (sel.t === "m") {
+            const m = members[sel.id];
+            who.innerHTML = `<span class="mono">${m.card.rank}${m.card.suit} ${m.name} menguasai: ${m.langs.join(", ")}</span><button class="chip" data-i="${sel.id}">lihat kartunya →</button>`;
+        } else {
+            const s = list[sel.id];
+            who.innerHTML = `<span class="mono">${s.name} dikuasai:</span>` + s.who.map(i => `<button class="chip" data-i="${i}">${members[i].card.rank}${members[i].card.suit} ${members[i].name}</button>`).join("");
+        }
+    }
+    function draw() {
+        const E = erd.getBoundingClientRect();
+        links.setAttribute("viewBox", `0 0 ${E.width} ${E.height}`);
+        links.innerHTML = pairs.map(([i, k]) => {
+            const a = mN[i].getBoundingClientRect(), b = lN[k].getBoundingClientRect();
+            const x1 = a.right - E.left, y1 = a.top + a.height / 2 - E.top, x2 = b.left - E.left, y2 = b.top + b.height / 2 - E.top, dx = (x2 - x1) * .5;
+            return `<path data-p="${i}-${k}" d="M${x1} ${y1}C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}"/>`;
+        }).join("");
+        paint();
+    }
+    erd.onclick = e => {
+        const n = e.target.closest(".nd"); if (!n) return;
+        const next = n.classList.contains("m") ? { t: "m", id: +n.dataset.i } : { t: "l", id: +n.dataset.k };
+        sel = sel && sel.t === next.t && sel.id === next.id ? null : next;
+        paint();
     };
     who.onclick = e => { const b = e.target.closest(".chip"); if (b) jumpTo(+b.dataset.i); };
+    new ResizeObserver(draw).observe(erd);
+    draw();
 })();
 
 // --- Label section gaya nama tabel: jumlah baris dari data ---
@@ -350,3 +396,5 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
         setTimeout(() => w.remove(), 4500);
     });
 })();
+
+// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatikan -
