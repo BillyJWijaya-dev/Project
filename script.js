@@ -280,7 +280,7 @@ function addPhoto(src) {
     img.onclick = () => { lb.firstElementChild.src = src; lb.classList.add("on"); };
     grid.prepend(img);
 }
-if (!galleryPhotos.length) grid.innerHTML = '<p class="empty">Belum ada foto. Upload foto pertama kalian →</p>';
+if (!galleryPhotos.length) grid.innerHTML = '<p class="empty">404: kenangan belum di-upload. Klik &quot;+ Upload foto&quot; →</p>';
 galleryPhotos.forEach(addPhoto);
 $("upload").onchange = e => [...e.target.files].forEach(f => {
     const r = new FileReader(); r.onload = () => addPhoto(r.result); r.readAsDataURL(f);
@@ -328,4 +328,25 @@ $("draw").onclick = () => {
         who.innerHTML = `<span class="mono">${s.name} dikuasai:</span>` + s.who.map(i => `<button class="chip" data-i="${i}">${members[i].card.rank}${members[i].card.suit} ${members[i].name}</button>`).join("");
     };
     who.onclick = e => { const b = e.target.closest(".chip"); if (b) jumpTo(+b.dataset.i); };
+})();
+
+// --- Label section gaya nama tabel: jumlah baris dari data ---
+$("lbPeople").insertAdjacentHTML("beforeend", `<em>${members.length} rows</em>`);
+$("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
+
+// --- Easter egg: klik logo 10x berturut-turut, kartu Joker jatuh ke layar ---
+(() => {
+    let n = 0, timer;
+    document.addEventListener("click", e => {
+        if (!e.target.closest(".mark img, .brand img, footer img")) return;
+        n++; clearTimeout(timer); timer = setTimeout(() => n = 0, 2500);
+        if (n < 10 || document.querySelector(".wild")) return;
+        n = 0;
+        const w = document.createElement("div");
+        w.className = "wild";
+        w.innerHTML = `<div class="jk"><b>JK<br>★</b><img src="${LOGO}" alt=""><b class="br">JK<br>★</b></div><p class="mono">kartu liar! kamu menemukan rahasia SOLIDARITY.</p>`;
+        w.onclick = () => w.remove();
+        document.body.append(w);
+        setTimeout(() => w.remove(), 4500);
+    });
 })();
