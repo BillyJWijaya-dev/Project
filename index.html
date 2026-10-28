@@ -11,11 +11,29 @@
         rel="stylesheet">
     <style>
         /* cadangan: tirai tetap rapi walau style.css di server masih versi lama */
-        #curtain { position: fixed; inset: 0; z-index: 300; background: #0B1D33 }
-        #curtain .ck { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px }
-        #curtain .ck img { width: min(150px, 36vw); height: auto }
+        #curtain {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: #0B1D33
+        }
+
+        #curtain .ck {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px
+        }
+
+        #curtain .ck img {
+            width: min(150px, 36vw);
+            height: auto
+        }
     </style>
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 
 <body class="wait">
@@ -67,7 +85,7 @@
         <div class="wrap two">
             <div>
                 <p class="mono tbl"><span class="sx">♣</span>tentang</p>
-                <h2>Kami cuma sekumpulan anak SI yang kebetulan cocok.</h2>
+                <h2>Cuma sekumpulan sembilan orang.</h2>
             </div>
             <div class="readme">
                 <div class="bar"><i></i><i></i><i></i><span>README.md</span></div>
@@ -76,7 +94,8 @@
                     <p class="q">&gt; Different Minds, One Connection.</p>
 
                     <p class="h">## Apa ini?</p>
-                    <p>Lingkaran pertemanan mahasiswa Sistem Informasi. Lahir dari kelas SI26A, dibuat pertama kali oleh Faris.</p>
+                    <p>Kelompok pertemanan mahasiswa Sistem Informasi. Lahir dari kelas SI26A, dibuat pertama kali oleh
+                        Faris.</p>
 
                     <p class="h">## Tujuan</p>
                     <ul>
@@ -159,9 +178,11 @@
         <div class="wrap">
             <p class="mono tbl"><span class="sx">&#9829;</span>takdir</p>
             <h2>Choose Your Fate</h2>
-            <p class="lead">Pilih satu kartu. Jangan kelamaan mikir, kartunya sudah tahu.</p>
+            <p class="lead">Pilih satu kartu, jangan kelamaan mikir.</p>
             <div class="fate-row" id="fateRow"></div>
-            <div class="fate-msg" id="fateMsg" aria-live="polite"><p class="mono">belum ada kartu terpilih</p></div>
+            <div class="fate-msg" id="fateMsg" aria-live="polite">
+                <p class="mono">belum ada kartu terpilih</p>
+            </div>
             <button class="btn small" id="fateReset">&#8635; Kocok ulang</button>
         </div>
     </section>
@@ -170,7 +191,8 @@
         <div class="wrap">
             <p class="mono tbl" id="lbSkills"><span class="sx red">♦</span>skill</p>
             <h2>Dinding skill</h2>
-            <p class="lead">Hubungan antara anggota dan bahasa pemrograman yang dikuasai, seperti diagram relasi. Klik anggota atau bahasa untuk menyalakan garisnya.</p>
+            <p class="lead">Hubungan antara anggota dan bahasa pemrograman yang dikuasai, seperti diagram relasi. Klik
+                anggota atau bahasa untuk menyalakan garisnya.</p>
             <div class="erd" id="erd">
                 <svg class="links" id="links" aria-hidden="true"></svg>
                 <div class="col" id="colM">
@@ -207,7 +229,7 @@
     <div class="lightbox" id="lb"><img alt=""></div>
     <div id="intro" aria-hidden="true"><img src="assets/images/jesterT.jpeg" alt=""></div>
     <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=9"></script>
     <script>
         /* jaring pengaman: kalau script.js gagal/telat/cache lama, tirai tetap hilang */
         setTimeout(function () {
