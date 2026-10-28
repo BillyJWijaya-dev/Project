@@ -267,7 +267,9 @@ nav a:hover {
     transform: rotateY(180deg);
     display: grid;
     place-items: center;
-    background: var(--navy2) repeating-linear-gradient(45deg, transparent 0 8px, rgba(169, 189, 224, .1) 8px 9px)
+    background-color: var(--navy2);
+    background-image: var(--harl);
+    background-size: 22px
 }
 
 .dback img {
@@ -386,13 +388,13 @@ nav a:hover {
     color: var(--soft)
 }
 
-/* latar hero: grid tipis + simbol kartu melayang */
+/* latar hero: pola harlequin + simbol kartu melayang */
 #hero::before {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(rgba(169, 189, 224, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(169, 189, 224, .09) 1px, transparent 1px);
-    background-size: 44px 44px;
+    background-image: var(--harl);
+    background-size: 56px 56px;
     -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
     mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
     pointer-events: none
@@ -770,7 +772,9 @@ footer img {
 
 .back {
     transform: rotateY(180deg);
-    background: var(--navy2) repeating-linear-gradient(45deg, transparent 0 10px, rgba(169, 189, 224, .08) 10px 11px);
+    background-color: var(--navy2);
+    background-image: var(--harl);
+    background-size: 30px;
     color: var(--white);
     display: flex;
     flex-direction: column;
@@ -1009,3 +1013,91 @@ footer img {
         height: 44px
     }
     }
+
+/* ===== tema jester x sistem informasi ===== */
+:root {
+    /* belah ketupat harlequin: kostum jester, simbol ♦, simpul diagram alir */
+    --harl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 0 48 24 24 48 0 24Z' fill='%23a9bde0' fill-opacity='.12'/%3E%3C/svg%3E");
+    /* tepi bergerigi seperti kerah jester */
+    --zig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='12'%3E%3Cpath d='M0 0 14 12 28 0Z' fill='%23a9bde0' fill-opacity='.3'/%3E%3C/svg%3E")
+}
+
+#about::before,
+#people::before,
+#skills::before,
+#gallery::before,
+footer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 12px;
+    background: var(--zig) repeat-x 0 0;
+    pointer-events: none
+}
+
+/* judul section gaya nama tabel */
+.tbl .sx {
+    margin-right: .55em;
+    font-size: 1.15em;
+    color: var(--white)
+}
+
+.tbl .sx.red {
+    color: #d9475c
+}
+
+.tbl em {
+    font-style: normal;
+    margin-left: .8em;
+    opacity: .6
+}
+
+/* footer gaya query */
+footer {
+    position: relative;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center
+}
+
+footer .sql {
+    color: var(--white);
+    font-size: .85rem;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap
+}
+
+footer .sql b {
+    color: var(--soft);
+    font-weight: 700
+}
+
+footer .res {
+    font-size: .74rem;
+    opacity: .75
+}
+
+/* easter egg: kartu Joker */
+.wild {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    background: rgba(6, 20, 58, .9);
+    cursor: pointer
+}
+
+.wild .jk {
+    position: relative;
+    width: min(240px, 60vw);
+    aspect-ratio: 5/7;
+    display: grid;
+    place-items: center;
+    background: var(--white
