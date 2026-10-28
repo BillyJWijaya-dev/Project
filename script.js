@@ -248,10 +248,10 @@ function playIntro(opts = {}) {
     }
     if (opts.swap) setTimeout(opts.swap, D * .2);
     const ov = intro.animate([
-        { background: "rgba(10,31,77,1)", opacity: jump ? 1 : 0, offset: 0 },
-        { background: "rgba(10,31,77,1)", opacity: 1, offset: .1 },
-        { background: "rgba(10,31,77,1)", opacity: 1, offset: .6 },
-        { background: "rgba(10,31,77,0)", opacity: 1, offset: 1 }
+        { background: "rgba(11,29,51,1)", opacity: jump ? 1 : 0, offset: 0 },
+        { background: "rgba(11,29,51,1)", opacity: 1, offset: .1 },
+        { background: "rgba(11,29,51,1)", opacity: 1, offset: .6 },
+        { background: "rgba(11,29,51,0)", opacity: 1, offset: 1 }
     ], { duration: D, fill: "forwards" });
     const P = "perspective(900px)";
     const lg = logo.animate([
@@ -444,6 +444,88 @@ function drawCable(still) {
 }
 let cableTimer;
 addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTimeout(() => requestAnimationFrame(() => drawCable(true)), 150); });
+
+// --- Choose Your Fate: pilih satu kartu tertutup, dapat pesan misterius ---
+(() => {
+    const FATES = [
+        "Seseorang di kelas ini diam-diam sudah mengerjakan tugasnya. Bukan kamu.",
+        "Deadline mendekat. Kopi tidak akan menyelamatkanmu, tapi tetap coba.",
+        "Kartu ini bilang: commit dulu, mikir belakangan.",
+        "Hari ini kamu akan menemukan bug yang ternyata salah ketik.",
+        "Satu teman akan mengajakmu belajar bareng. Terima. Itu jebakan yang baik.",
+        "Yang kamu cari ada di baris yang kamu skip.",
+        "Sinyal wifi akan putus tepat saat kamu mau submit.",
+        "Joker sedang mengawasimu. Tenang, dia di pihak kita.",
+        "Kamu lebih siap dari yang kamu kira. Sedikit.",
+        "Jangan hapus folder itu. Kamu tahu folder yang mana.",
+        "Akan ada yang bilang 'gampang kok'. Jangan percaya, tapi tanya caranya.",
+        "Takdirmu: begadang sekali lagi, lalu tidur panjang."
+    ];
+    const SUITS = ["♠", "♥", "♦", "♣"], RANKS = ["A", "K", "Q", "J", "10", "9", "7"];
+    const row = $("fateRow"), box = $("fateMsg");
+    const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    function deal() {
+        const msgs = shuffle(FATES), ranks = shuffle(RANKS);
+        box.innerHTML = '<p class="mono">belum ada kartu terpilih</p>';
+        row.innerHTML = [0, 1, 2, 3, 4].map(i => {
+            const suit = SUITS[Math.floor(Math.random() * 4)], red = "♥♦".includes(suit);
+            return `<button class="fcard" data-m="${i}" style="--a:${((i - 2) * 5)}deg" aria-label="Kartu tertutup ${i + 1}">` +
+                `<span class="fflip"><span class="ff fbk"><img src="${LOGO}" alt=""></span>` +
+                `<span class="ff ffr${red ? " red" : ""}"><b>${ranks[i]}</b><i>${suit}</i></span></span></button>`;
+        }).join("");
+        row._msgs = msgs;
+    }
+    row.onclick = e => {
+        const c = e.target.closest(".fcard");
+        if (!c || row.querySelector(".fcard.on")) return;
+        c.classList.add("on");
+        row.querySelectorAll(".fcard").forEach(x => { if (x !== c) x.classList.add("lock"); });
+        ding(1318); setTimeout(() => ding(1760), 180);
+        setTimeout(() => {
+            box.innerHTML = "";
+            const p = document.createElement("p"); p.className = "t"; p.textContent = row._msgs[+c.dataset.m];
+            box.appendChild(p);
+        }, 450);
+    };
+    $("fateReset").onclick = deal;
+    deal();
+})();
+
+// --- Latar: partikel simbol kartu yang melayang pelan ---
+(() => {
+    const cv = $("fx");
+    if (!cv) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { cv.remove(); return; }
+    const ctx = cv.getContext("2d"), SYM = ["♠", "♥", "♦", "♣", "•", "•"];
+    let W = 0, H = 0, items = [], raf = 0;
+    const mk = (init) => ({
+        x: Math.random() * W, y: init ? Math.random() * H : H + 30,
+        s: 10 + Math.random() * 14, v: .12 + Math.random() * .35, d: (Math.random() - .5) * .25,
+        ph: Math.random() * 6.28, a: .05 + Math.random() * .13, g: SYM[Math.floor(Math.random() * SYM.length)], r: (Math.random() - .5) * .01
+    });
+    function size() {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const n = W < 700 ? 20 : 40;
+        while (items.length < n) items.push(mk(true));
+        items.length = n;
+    }
+    function frame(t) {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of items) {
+            p.y -= p.v; p.x += p.d + Math.sin(t / 2200 + p.ph) * .18;
+            if (p.y < -30) Object.assign(p, mk(false));
+            ctx.globalAlpha = p.a; ctx.fillStyle = "#A9C5E8";
+            ctx.font = `${p.s}px 'Archivo', serif`;
+            ctx.fillText(p.g, p.x, p.y);
+        }
+        raf = requestAnimationFrame(frame);
+    }
+    addEventListener("resize", size);
+    document.addEventListener("visibilitychange", () => { cancelAnimationFrame(raf); if (!document.hidden) raf = requestAnimationFrame(frame); });
+    size(); raf = requestAnimationFrame(frame);
+})();
 
 // --- Tirai panggung: terbuka saat klik (atau otomatis), sekali per sesi ---
 (() => {
