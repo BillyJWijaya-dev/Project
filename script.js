@@ -103,17 +103,14 @@ const galleryPhotos = [
 const LOGO = "assets/images/jesterT.jpeg";
 
 // ===== SOUND EFFECT TIRAI =====
-// Taruh file suaramu di folder assets/audio/ lalu tulis nama filenya di sini.
-// Kosongkan ("") kalau mau pakai bunyi lonceng bawaan. Kalau file tidak ketemu, otomatis pakai lonceng.
-const CURTAIN_SOUND = "";   // contoh: "assets/audio/tirai.mp3"
-const CURTAIN_VOLUME = 0.8;   // 0 sampai 1
+const CURTAIN_SOUND = "assets/audio/curtain.mp3";
+const CURTAIN_VOLUME = 0.9;
 
 // ===== SOUND EFFECT EASTER EGG (kartu Joker) =====
-// Sama seperti di atas: taruh file di assets/audio/ lalu tulis namanya. Kosongkan ("") untuk bunyi lonceng bawaan.
-const EASTER_SOUND = "";    // contoh: "assets/audio/joker.mp3"
-const EASTER_VOLUME = 0.9;    // 0 sampai 1
+const EASTER_SOUND = "assets/audio/easter.mp3";
+const EASTER_VOLUME = 0.9;
 // Foto di tengah kartu Joker. Taruh di assets/images/ lalu tulis namanya.
-const EASTER_IMAGE = "assets/images/jesterT.jpeg";
+const EASTER_IMAGE = "assets/images/easter.jpeg";
 // ==============================
 /* ========================== */
 
@@ -400,10 +397,10 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
     if (easterSnd) { easterSnd.preload = "auto"; easterSnd.volume = EASTER_VOLUME; }
     const fanfare = () => [1568, 1976, 2349, 3136].forEach((f, i) => setTimeout(() => ding(f, .06), i * 140));
     function playEaster() {
-        if (!bellOn) return;                       // ikut tombol "lonceng: on/off"
+        if (!bellOn) return;
         if (!easterSnd) return fanfare();
         easterSnd.currentTime = 0;
-        easterSnd.play().catch(fanfare);           // file hilang / diblokir -> lonceng bawaan
+        easterSnd.play().catch(fanfare);
     }
     let n = 0, timer;
     document.addEventListener("click", e => {
@@ -421,7 +418,7 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
     });
 })();
 
-// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatikan ---
+// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatiian ---
 let bellOn = true;
 try { bellOn = localStorage.getItem("bell") !== "off"; } catch { }
 let audioCtx;
@@ -487,7 +484,7 @@ addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTim
     ];
     const SUITS = ["♠", "♥", "♦", "♣"], RANKS = ["A", "K", "Q", "J", "10", "9", "7"];
     const row = $("fateRow"), box = $("fateMsg");
-    const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
     function deal() {
         const msgs = shuffle(FATES), ranks = shuffle(RANKS);
         box.innerHTML = '<p class="mono">belum ada kartu terpilih</p>';
@@ -559,10 +556,10 @@ addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTim
     if (curtainSnd) { curtainSnd.preload = "auto"; curtainSnd.volume = CURTAIN_VOLUME; }
     const bellFallback = () => { ding(1318); setTimeout(() => ding(1760), 200); };
     function playCurtain() {
-        if (!bellOn) return;                       // ikut tombol "lonceng: on/off"
+        if (!bellOn) return;
         if (!curtainSnd) return bellFallback();
         curtainSnd.currentTime = 0;
-        curtainSnd.play().catch(bellFallback);     // file hilang / diblokir -> lonceng bawaan
+        curtainSnd.play().catch(bellFallback);
     }
     const startHero = delay => setTimeout(() => requestAnimationFrame(() => drawCable(false)), delay);
     if (reduced) k.classList.add("calm");
