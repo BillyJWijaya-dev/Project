@@ -15,7 +15,7 @@ const members = [
     {
         name: "Billy Jonas Wijaya", role: "Fineshyt",
         bio: "Aku bukan dipimpin, aku yang memimpin.",
-        langs: ["HTML", "PYTHON", "SQL", "Java Script"],
+        langs: ["HTML", "PYTHON", "SQL", "JAVASCRIPT"],
         hobbies: ["Game", "Menggambar", "Baca Buku", "Tidur", "Musik"],
         photo: "assets/images/billy.jpeg",
         card: { rank: "JK", suit: "★" },
@@ -130,13 +130,28 @@ members.forEach((m, i) => m.langs.forEach(l => {
     $("track").innerHTML = half + half;
 
     // angka otomatis dari data
-    $("stats").innerHTML = `<span><b>${n}</b>anggota</span><span><b>${skillMap.size}</b>bahasa</span><span>sejak<b style="margin:0 0 0 .3em">${SINCE}</b></span>`;
+    $("stats").innerHTML = `<span><b data-to="${n}">${n}</b><em>anggota</em></span><span><b data-to="${skillMap.size}">${skillMap.size}</b><em>bahasa</em></span><span><b>${SINCE}</b><em>sejak</em></span>`;
+    // angka menghitung naik dari nol saat baris angka terlihat
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const nums = document.querySelectorAll("#stats b[data-to]");
+        nums.forEach(b => b.textContent = 0);
+        new IntersectionObserver(([e], o) => {
+            if (!e.isIntersecting) return; o.disconnect();
+            const t0 = performance.now();
+            const tick = t => {
+                const p = Math.min(1, (t - t0) / 1200);
+                nums.forEach(b => b.textContent = Math.round(+b.dataset.to * (1 - Math.pow(1 - p, 3))));
+                if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }, { threshold: .6 }).observe($("stats"));
+    }
 
     // SOLIDARITY dipas ke lebar layar
     const mark = $("mark");
     const fit = () => {
         mark.style.fontSize = "100px";
-        mark.style.fontSize = 100 * mark.parentElement.clientWidth * .96 / mark.getBoundingClientRect().width + "px";
+        mark.style.fontSize = 100 * mark.parentElement.clientWidth * .92 / mark.getBoundingClientRect().width + "px";
     };
     fit(); addEventListener("resize", fit);
     if (document.fonts) document.fonts.ready.then(fit);
