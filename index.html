@@ -12,7 +12,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="wait">
+
+    <!-- tirai panggung -->
+    <div id="curtain" role="presentation">
+        <div class="cp l"></div>
+        <div class="cp r"></div>
+        <div class="ck"><img src="assets/images/jesterT.jpeg" alt="">
+            <p class="mono">klik untuk membuka tirai</p>
+        </div>
+    </div>
 
     <header class="top">
         <a href="#hero" class="brand"><img src="assets/images/jesterT.jpeg" alt="">SOLIDARITY</a>
@@ -27,6 +36,7 @@
     <section id="hero">
         <div class="glyphs" aria-hidden="true"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></div>
         <div class="hero-in">
+            <svg class="cable" id="cable" aria-hidden="true"></svg>
             <p class="mark" id="mark" role="img" aria-label="SOLIDARITY">
                 <span aria-hidden="true">SOLID</span>
                 <img src="assets/images/jesterT.jpeg" alt="">
@@ -50,12 +60,32 @@
                 <p class="mono tbl"><span class="sx">♣</span>tentang</p>
                 <h2>Kami cuma sekumpulan anak SI yang kebetulan cocok.</h2>
             </div>
-            <div class="prose">
-                <p>SOLIDARITY lahir dari kelas SI26A dibuat pertama kali oleh Faris. Tujuan dibuat lingkaran pertemanan
-                    ini adalah untuk mengerjakan tugas bersama, belajar, mengenal satu sama lain, dan membangun potensi
-                    diri sebagai mahasiswa Sistem Informasi.</p>
-                <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang. Kami welcome
-                    ke semua orang, tergantung bagaimana cara pandang anda kepada pertemanan kami.</p>
+            <div class="readme">
+                <div class="bar"><i></i><i></i><i></i><span>README.md</span></div>
+                <div class="body">
+                    <p class="h"># SOLIDARITY</p>
+                    <p class="q">&gt; Different Minds, One Connection.</p>
+
+                    <p class="h">## Apa ini?</p>
+                    <p>Lingkaran pertemanan mahasiswa Sistem Informasi. Lahir dari kelas SI26A, dibuat pertama kali oleh Faris.</p>
+
+                    <p class="h">## Tujuan</p>
+                    <ul>
+                        <li>mengerjakan tugas bersama</li>
+                        <li>belajar</li>
+                        <li>mengenal satu sama lain</li>
+                        <li>membangun potensi diri sebagai mahasiswa Sistem Informasi</li>
+                    </ul>
+
+                    <p class="h">## Isi repositori</p>
+                    <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang.</p>
+
+                    <p class="h">## Cara pakai</p>
+                    <p>Baca pelan-pelan, tertawa seperlunya.</p>
+
+                    <p class="h">## Kontribusi</p>
+                    <p>Kami welcome ke semua orang, tergantung bagaimana cara pandang anda kepada pertemanan kami.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -120,9 +150,16 @@
         <div class="wrap">
             <p class="mono tbl" id="lbSkills"><span class="sx red">♦</span>skill</p>
             <h2>Dinding skill</h2>
-            <p class="lead">Semua bahasa pemrograman yang dikuasai anggota, digabung jadi satu. Klik salah satu untuk
-                melihat siapa saja yang jago.</p>
-            <div class="wall" id="wall"></div>
+            <p class="lead">Hubungan antara anggota dan bahasa pemrograman yang dikuasai, seperti diagram relasi. Klik anggota atau bahasa untuk menyalakan garisnya.</p>
+            <div class="erd" id="erd">
+                <svg class="links" id="links" aria-hidden="true"></svg>
+                <div class="col" id="colM">
+                    <h4 class="mono">anggota</h4>
+                </div>
+                <div class="col" id="colL">
+                    <h4 class="mono">bahasa</h4>
+                </div>
+            </div>
             <div class="who" id="who"></div>
         </div>
     </section>
@@ -145,10 +182,11 @@
         <p class="mono res">→ 1 row returned · SOLIDARITY · Sistem Informasi · dibuat bareng-bareng</p>
     </footer>
 
+    <button class="belltoggle mono" id="bell" aria-label="Nyalakan atau matikan suara lonceng">lonceng: on</button>
+
     <div class="lightbox" id="lb"><img alt=""></div>
     <div id="intro" aria-hidden="true"><img src="assets/images/jesterT.jpeg" alt=""></div>
     <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
     <script src="script.js"></script>
 </body>
-
-        </html>
+</html>
