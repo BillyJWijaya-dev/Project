@@ -123,7 +123,7 @@ nav a:hover {
 
 /* ===== hero: poster raksasa + kartu dibagikan ===== */
 #hero {
-    --w: clamp(64px, 11vw, 140px);
+    --w: clamp(64px, 17vw, 150px);
     min-height: 100vh;
     min-height: 100svh;
     display: flex;
@@ -138,21 +138,37 @@ nav a:hover {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+    gap: clamp(18px, 4vh, 36px);
     text-align: center
 }
 
 #hero h1 {
     margin: 0;
-    padding: 12px 24px 0;
-    font-size: clamp(1.5rem, 3.6vw, 2.6rem)
+    padding: 0 24px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    font-size: clamp(1.05rem, 2.6vw, 1.7rem)
 }
 
 /* kartu dibagikan */
 .deal {
     position: relative;
+    isolation: isolate;
     height: calc(var(--w) * 2.4)
+}
+
+/* tepi meja poker: satu garis tipis di belakang kipas */
+.deal::after {
+    content: "";
+    position: absolute;
+    inset: 12% -6% 0 -6%;
+    z-index: -1;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    pointer-events: none
 }
 
 .dcard {
@@ -172,8 +188,15 @@ nav a:hover {
     --a: calc(var(--t) * 8deg);
     transform: translate(var(--x), var(--y)) rotate(var(--a));
     transition: transform .25s;
-    animation: deal .9s cubic-bezier(.2, .8, .2, 1) backwards;
-    animation-delay: calc(var(--d) * .11s + .4s)
+    animation: deal .9s cubic-bezier(.2, .8, .2, 1) backwards calc(var(--d) * .11s + .4s),
+        bob 4.6s ease-in-out calc(var(--d) * .35s + 1.8s) infinite
+}
+
+/* naik-turun pelan bergantian (properti translate terpisah dari transform) */
+@keyframes bob {
+    50% {
+        translate: 0 -7px
+    }
 }
 
 .dcard:hover,
@@ -337,8 +360,11 @@ nav a:hover {
 }
 
 .stats span {
-    padding: 14px 12px;
-    font-size: clamp(.9rem, 1.6vw, 1.1rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 12px 20px;
     border-right: 1px solid var(--line)
 }
 
@@ -347,16 +373,84 @@ nav a:hover {
 }
 
 .stats b {
-    font-size: 1.5em;
+    font-size: clamp(2rem, 6vw, 3.2rem);
     font-weight: 800;
-    margin-right: .2em
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums
+}
+
+.stats em {
+    font: 400 .78rem 'JetBrains Mono', monospace;
+    letter-spacing: .06em;
+    color: var(--soft)
+}
+
+/* latar hero: grid tipis + simbol kartu melayang */
+#hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(169, 189, 224, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(169, 189, 224, .09) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+    mask-image: radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+    pointer-events: none
+}
+
+.glyphs span {
+    position: absolute;
+    font-size: clamp(7rem, 28vw, 18rem);
+    line-height: 1;
+    color: var(--white);
+    opacity: .05;
+    pointer-events: none;
+    animation: drift 16s ease-in-out infinite alternate
+}
+
+.glyphs span:nth-child(1) {
+    top: 9%;
+    left: -3%;
+    --r: -8deg
+}
+
+.glyphs span:nth-child(2) {
+    top: 20%;
+    right: -5%;
+    --r: 9deg;
+    animation-delay: -4s
+}
+
+.glyphs span:nth-child(3) {
+    bottom: 24%;
+    left: 3%;
+    --r: 6deg;
+    animation-delay: -8s
+}
+
+.glyphs span:nth-child(4) {
+    bottom: 9%;
+    right: 1%;
+    --r: -7deg;
+    animation-delay: -12s
+}
+
+@keyframes drift {
+    from {
+        transform: translateY(0) rotate(var(--r))
+    }
+
+    to {
+        transform: translateY(-26px) rotate(calc(var(--r) * -1))
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
     .dcard,
     .dflip,
-    .track {
+    .track,
+    .glyphs span {
         animation: none
     }
 }
@@ -914,4 +1008,4 @@ footer img {
         width: 44px;
         height: 44px
     }
-}
+    }
