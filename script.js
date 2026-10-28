@@ -103,12 +103,17 @@ const galleryPhotos = [
 const LOGO = "assets/images/jesterT.jpeg";
 
 // ===== SOUND EFFECT TIRAI =====
-const CURTAIN_SOUND = "assets/audio/curtain.mp3";
+// Taruh file suaramu di folder assets/audio/ lalu tulis nama filenya di sini.
+// Kosongkan ("") kalau mau pakai bunyi lonceng bawaan. Kalau file tidak ketemu, otomatis pakai lonceng.
+const CURTAIN_SOUND = "";   // contoh: "assets/audio/tirai.mp3"
 const CURTAIN_VOLUME = 0.8;   // 0 sampai 1
 
 // ===== SOUND EFFECT EASTER EGG (kartu Joker) =====
-const EASTER_SOUND = "assets/audio/easter.mp3";
+// Sama seperti di atas: taruh file di assets/audio/ lalu tulis namanya. Kosongkan ("") untuk bunyi lonceng bawaan.
+const EASTER_SOUND = "";    // contoh: "assets/audio/joker.mp3"
 const EASTER_VOLUME = 0.9;    // 0 sampai 1
+// Foto di tengah kartu Joker. Taruh di assets/images/ lalu tulis namanya.
+const EASTER_IMAGE = "assets/images/jesterT.jpeg";
 // ==============================
 /* ========================== */
 
@@ -392,10 +397,187 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
 // --- Easter egg: klik logo 10x berturut-turut, kartu Joker jatuh ke layar ---
 (() => {
     const easterSnd = EASTER_SOUND ? new Audio(EASTER_SOUND) : null;
-    if (easterSnd) { easterSnd.preload = "auto"; easterSnd.volume = EASTER }
+    if (easterSnd) { easterSnd.preload = "auto"; easterSnd.volume = EASTER_VOLUME; }
+    const fanfare = () => [1568, 1976, 2349, 3136].forEach((f, i) => setTimeout(() => ding(f, .06), i * 140));
+    function playEaster() {
+        if (!bellOn) return;                       // ikut tombol "lonceng: on/off"
+        if (!easterSnd) return fanfare();
+        easterSnd.currentTime = 0;
+        easterSnd.play().catch(fanfare);           // file hilang / diblokir -> lonceng bawaan
+    }
+    let n = 0, timer;
+    document.addEventListener("click", e => {
+        if (!e.target.closest(".mark img, .brand img, footer img")) return;
+        n++; clearTimeout(timer); timer = setTimeout(() => n = 0, 2500);
+        if (n < 10 || document.querySelector(".wild")) return;
+        n = 0;
+        const w = document.createElement("div");
+        w.className = "wild";
+        w.innerHTML = `<div class="jk"><b>JK<br>★</b><img src="${EASTER_IMAGE}" alt=""><b class="br">JK<br>★</b></div><p class="mono">kartu liar! kamu menemukan rahasia SOLIDARITY.</p>`;
+        w.onclick = () => w.remove();
+        document.body.append(w);
+        playEaster();
+        setTimeout(() => w.remove(), 4500);
+    });
 })();
 
-// img easter
+// --- Lonceng: bunyi halus saat kartu dibalik, bisa dimatikan ---
+let bellOn = true;
+try { bellOn = localStorage.getItem("bell") !== "off"; } catch { }
+let audioCtx;
+function ding(f = 1568, vol = .05) {
+    if (!bellOn) return;
+    try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const t = audioCtx.currentTime;
+        [[f, 1], [f * 1.5, .45], [f * 2.76, .2]].forEach(([fr, g]) => {
+            const o = audioCtx.createOscillator(), a = audioCtx.createGain();
+            o.type = "sine"; o.frequency.value = fr;
+            a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(vol * g, t + .006); a.gain.exponentialRampToValueAtTime(.0001, t + .9);
+            o.connect(a).connect(audioCtx.destination); o.start(t); o.stop(t + 1);
+        });
+    } catch { }
+}
+$("bell").textContent = "lonceng: " + (bellOn ? "on" : "off");
+$("bell").onclick = () => {
+    bellOn = !bellOn;
+    try { localStorage.setItem("bell", bellOn ? "on" : "off"); } catch { }
+    $("bell").textContent = "lonceng: " + (bellOn ? "on" : "off");
+    ding();
+};
+$("pcard").addEventListener("click", () => ding());
+
+// --- Kabel dari logo ke kartu yang dibagikan ---
+function drawCable(still) {
+    const hi = document.querySelector(".hero-in"), cab = $("cable"), logo = document.querySelector(".mark img"), deal = $("deal");
+    const H = hi.getBoundingClientRect(), L = logo.getBoundingClientRect(), D = deal.getBoundingClientRect();
+    cab.classList.toggle("still", !!still);
+    cab.setAttribute("viewBox", `0 0 ${H.width} ${H.height}`);
+    const x0 = L.left + L.width / 2 - H.left, y0 = L.bottom - H.top;
+    // posisi ujung atas tiap kartu dihitung dari rumus kipas (tidak bergantung animasi)
+    const pts = [...deal.querySelectorAll(".dcard")].map(c => {
+        const w = c.offsetWidth, t = parseFloat(c.style.getPropertyValue("--t")), a = t * 8 * Math.PI / 180;
+        const cx = D.left + D.width / 2 + t * w * .55 - H.left, cy = D.top + D.height / 2 + (t * t * .045 - .3) * w - H.top;
+        return [cx + .7 * w * Math.sin(a), cy - .7 * w * Math.cos(a) - 10];
+    });
+    const yb = y0 + (Math.min(...pts.map(p => p[1])) - y0) * .5;
+    cab.innerHTML = pts.map(([x, y], k) =>
+        `<path pathLength="1" d="M${x0} ${y0}V${yb}H${x}V${y}" style="animation-delay:${(.15 + k * .08).toFixed(2)}s"/>` +
+        `<circle cx="${x}" cy="${y}" r="3" style="animation-delay:${(1 + k * .08).toFixed(2)}s"/>`).join("") +
+        `<circle cx="${x0}" cy="${y0}" r="3.5" style="animation-delay:0s"/>`;
+}
+let cableTimer;
+addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTimeout(() => requestAnimationFrame(() => drawCable(true)), 150); });
+
+// --- Choose Your Fate: pilih satu kartu tertutup, dapat pesan misterius ---
 (() => {
-    const EASTER_IMAGE = "assets/images/easter.jpeg";
+    const FATES = [
+        "Seseorang di kelas ini diam-diam sudah mengerjakan tugasnya. Bukan kamu.",
+        "Deadline mendekat. Kopi tidak akan menyelamatkanmu, tapi tetap coba.",
+        "Kartu ini bilang: commit dulu, mikir belakangan.",
+        "Hari ini kamu akan menemukan bug yang ternyata salah ketik.",
+        "Satu teman akan mengajakmu belajar bareng. Terima. Itu jebakan yang baik.",
+        "Yang kamu cari ada di baris yang kamu skip.",
+        "Sinyal wifi akan putus tepat saat kamu mau submit.",
+        "Joker sedang mengawasimu. Tenang, dia di pihak kita.",
+        "Kamu lebih siap dari yang kamu kira. Sedikit.",
+        "Jangan hapus folder itu. Kamu tahu folder yang mana.",
+        "Akan ada yang bilang 'gampang kok'. Jangan percaya, tapi tanya caranya.",
+        "Takdirmu: begadang sekali lagi, lalu tidur panjang."
+    ];
+    const SUITS = ["♠", "♥", "♦", "♣"], RANKS = ["A", "K", "Q", "J", "10", "9", "7"];
+    const row = $("fateRow"), box = $("fateMsg");
+    const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    function deal() {
+        const msgs = shuffle(FATES), ranks = shuffle(RANKS);
+        box.innerHTML = '<p class="mono">belum ada kartu terpilih</p>';
+        row.innerHTML = [0, 1, 2, 3, 4].map(i => {
+            const suit = SUITS[Math.floor(Math.random() * 4)], red = "♥♦".includes(suit);
+            return `<button class="fcard" data-m="${i}" style="--a:${((i - 2) * 5)}deg" aria-label="Kartu tertutup ${i + 1}">` +
+                `<span class="fflip"><span class="ff fbk"><img src="${LOGO}" alt=""></span>` +
+                `<span class="ff ffr${red ? " red" : ""}"><b>${ranks[i]}</b><i>${suit}</i></span></span></button>`;
+        }).join("");
+        row._msgs = msgs;
+    }
+    row.onclick = e => {
+        const c = e.target.closest(".fcard");
+        if (!c || row.querySelector(".fcard.on")) return;
+        c.classList.add("on");
+        row.querySelectorAll(".fcard").forEach(x => { if (x !== c) x.classList.add("lock"); });
+        ding(1318); setTimeout(() => ding(1760), 180);
+        setTimeout(() => {
+            box.innerHTML = "";
+            const p = document.createElement("p"); p.className = "t"; p.textContent = row._msgs[+c.dataset.m];
+            box.appendChild(p);
+        }, 450);
+    };
+    $("fateReset").onclick = deal;
+    deal();
+})();
+
+// --- Latar: partikel simbol kartu yang melayang pelan ---
+(() => {
+    const cv = $("fx");
+    if (!cv) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { cv.remove(); return; }
+    const ctx = cv.getContext("2d"), SYM = ["♠", "♥", "♦", "♣", "•", "•"];
+    let W = 0, H = 0, items = [], raf = 0;
+    const mk = (init) => ({
+        x: Math.random() * W, y: init ? Math.random() * H : H + 30,
+        s: 10 + Math.random() * 14, v: .12 + Math.random() * .35, d: (Math.random() - .5) * .25,
+        ph: Math.random() * 6.28, a: .05 + Math.random() * .13, g: SYM[Math.floor(Math.random() * SYM.length)], r: (Math.random() - .5) * .01
+    });
+    function size() {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const n = W < 700 ? 20 : 40;
+        while (items.length < n) items.push(mk(true));
+        items.length = n;
+    }
+    function frame(t) {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of items) {
+            p.y -= p.v; p.x += p.d + Math.sin(t / 2200 + p.ph) * .18;
+            if (p.y < -30) Object.assign(p, mk(false));
+            ctx.globalAlpha = p.a; ctx.fillStyle = "#A9C5E8";
+            ctx.font = `${p.s}px 'Archivo', serif`;
+            ctx.fillText(p.g, p.x, p.y);
+        }
+        raf = requestAnimationFrame(frame);
+    }
+    addEventListener("resize", size);
+    document.addEventListener("visibilitychange", () => { cancelAnimationFrame(raf); if (!document.hidden) raf = requestAnimationFrame(frame); });
+    size(); raf = requestAnimationFrame(frame);
+})();
+
+// --- Tirai panggung: muncul tiap halaman dibuka, terbuka saat klik (atau otomatis) ---
+(() => {
+    const k = $("curtain"), body = document.body;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const curtainSnd = CURTAIN_SOUND ? new Audio(CURTAIN_SOUND) : null;
+    if (curtainSnd) { curtainSnd.preload = "auto"; curtainSnd.volume = CURTAIN_VOLUME; }
+    const bellFallback = () => { ding(1318); setTimeout(() => ding(1760), 200); };
+    function playCurtain() {
+        if (!bellOn) return;                       // ikut tombol "lonceng: on/off"
+        if (!curtainSnd) return bellFallback();
+        curtainSnd.currentTime = 0;
+        curtainSnd.play().catch(bellFallback);     // file hilang / diblokir -> lonceng bawaan
+    }
+    const startHero = delay => setTimeout(() => requestAnimationFrame(() => drawCable(false)), delay);
+    if (reduced) k.classList.add("calm");
+    body.style.overflow = "hidden";
+    let done = false;
+    const open = () => {
+        if (done) return; done = true;
+        k.classList.add("open"); body.classList.remove("wait");
+        playCurtain();
+        startHero(2600);
+        setTimeout(() => { k.remove(); body.style.overflow = ""; }, reduced ? 700 : 1700);
+    };
+    k.addEventListener("click", open);
+    k.addEventListener("pointerdown", open);
+    k.addEventListener("touchstart", open, { passive: true });
+    addEventListener("keydown", open, { once: true });
+    setTimeout(open, 3500);
 })();
