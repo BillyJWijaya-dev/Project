@@ -464,6 +464,8 @@ addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTim
         setTimeout(() => { k.remove(); body.style.overflow = ""; }, 1700);
     };
     k.addEventListener("click", open);
+    k.addEventListener("pointerdown", open);
+    k.addEventListener("touchstart", open, { passive: true });
     addEventListener("keydown", open, { once: true });
     setTimeout(open, 3500);
 })();
