@@ -100,7 +100,7 @@ const galleryPhotos = [
     "assets/galeri/10.jpeg",
     "assets/galeri/11.jpeg",
 ];
-const LOGO = "assets/images/jesterL.jpeg";
+const LOGO = "assets/images/jesterT.jpeg";
 /* ========================== */
 
 const $ = id => document.getElementById(id);
