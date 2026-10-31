@@ -162,7 +162,9 @@ members.forEach((m, i) => m.langs.forEach(l => {
     const mark = $("mark");
     const fit = () => {
         mark.style.fontSize = "100px";
-        mark.style.fontSize = 100 * mark.parentElement.clientWidth * .92 / mark.getBoundingClientRect().width + "px";
+        const P = Math.min(mark.parentElement.clientWidth * .92, 640); // lebar tulisan = acuan ukuran seluruh hero
+        mark.style.fontSize = 100 * P / mark.getBoundingClientRect().width + "px";
+        mark.closest("#hero").style.setProperty("--P", P + "px");
     };
     fit(); addEventListener("resize", fit);
     if (document.fonts) document.fonts.ready.then(fit);

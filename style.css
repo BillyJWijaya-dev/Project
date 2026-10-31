@@ -123,7 +123,11 @@ nav a:hover {
 
 /* ===== hero: poster raksasa + kartu dibagikan ===== */
 #hero {
-    --w: clamp(64px, 17vw, 150px);
+    /* semua ukuran hero mengikuti lebar tulisan SOLIDARITY (--P), persis seperti contoh:
+       logo besar = 54,5% dari --P, lebar kartu = 16,5% dari --P (kartu selalu lebih kecil dari logo) */
+    --P: min(92vw, 640px);
+    --lw: calc(var(--P) * .545);
+    --w: calc(var(--P) * .165);
     min-height: 100vh;
     min-height: 100svh;
     display: flex;
@@ -141,7 +145,8 @@ nav a:hover {
     position: relative;
     z-index: 1;
     justify-content: center;
-    gap: clamp(18px, 4vh, 36px);
+    --g: clamp(18px, 4vh, 36px);
+    gap: var(--g);
     text-align: center
 }
 
@@ -1726,9 +1731,8 @@ body::before {
 /* ===== logo jester besar: tali kartu keluar dari ujung jarinya ===== */
 .jester {
     display: block;
-    width: auto;
+    width: var(--lw);
     height: auto;
-    max-width: 80vw;
-    max-height: clamp(170px, 30svh, 320px);
-    margin: 0 auto
+    /* jarak visual ke tulisan dan ke kartu dibuat sama dengan contoh */
+    margin: calc(13px - var(--g)) auto calc(17px - var(--g))
 }
