@@ -423,66 +423,42 @@ $("bell").onclick = () => {
 };
 $("pcard").addEventListener("click", () => ding());
 
-// --- Dalang kartu: dua tangan menarik tali ke sembilan kartu ---
+// --- Dalang kartu: sembilan tali dari ujung jari di logo ke sembilan kartu ---
+// Koordinat ujung jari pada gambar logo (1254 x 1254 px), urut dari kiri ke kanan.
+// Jari kesepuluh (kelingking kanan, sekitar 1195,935) dibiarkan bebas.
+const FINGERTIPS = [[72, 925], [272, 948], [378, 890], [485, 738], [518, 872], [742, 890], [792, 748], [910, 922], [1010, 962]];
+const HAND_CROP = 80;   // bagian atas gambar yang dipotong lewat CSS (px pada gambar asli)
 let pup = null, pupRun = false, pupVisible = true;
 function buildPuppet(animate) {
     const hi = document.querySelector(".hero-in"), svg = $("puppet"), pz = $("pz"), deal = $("deal");
     const cards = [...deal.querySelectorAll(".dcard")];
     if (cards.length < 9) return;
-    const H = hi.getBoundingClientRect(), Z = pz.getBoundingClientRect(), D = deal.getBoundingClientRect(), W = H.width;
+    const H = hi.getBoundingClientRect(), Z = pz.getBoundingClientRect(), D = deal.getBoundingClientRect();
     svg.classList.toggle("still", !animate);
-    svg.setAttribute("viewBox", `0 0 ${W} ${H.height}`);
+    svg.setAttribute("viewBox", `0 0 ${H.width} ${H.height}`);
+    const sc = Z.width / 1254;
     // titik tengah sisi atas tiap kartu, dihitung dari rumus kipas
     const pts = cards.map(c => {
         const w = c.offsetWidth, t = parseFloat(c.style.getPropertyValue("--t")), a = t * 8 * Math.PI / 180;
         const cx = D.left + D.width / 2 + t * w * .55 - H.left, cy = D.top + D.height / 2 + (t * t * .045 - .3) * w - H.top;
         return [cx + .7 * w * Math.sin(a), cy - .7 * w * Math.cos(a)];
     });
-    const zt = Z.top - H.top, zh = Z.height;
-    const pw = Math.min(W * .3, 150), ph = Math.min(54, zh * .42), fw = Math.max(9, pw * .16);
-    const palmY = zt + 6 + ph / 2, palmB = palmY + ph / 2 - 2, flen = Math.max(26, zh - ph - 18);
-    const lerp = (a, b, t) => a + (b - a) * t, NAVY = "#0a1f4d", WHITE = "#f7f8fb";
-    const items = []; let hands = "", strings = "";
-    [["l", W * .25, 1], ["r", W * .75, -1]].forEach(([id, cx, sg]) => {
-        const X = o => cx + sg * o;
-        const map = id === "l" ? [0, 1, 2, 3] : [null, 8, 7, 6];      // kelingking -> telunjuk
-        const thumb = id === "l" ? 4 : 5, lens = [.7, .9, 1, .9];
-        const finger = (bx, by, tx, ty, card) => {
-            const d = `M${bx} ${by}Q${(bx + (tx - bx) * .1).toFixed(1)} ${((by + ty) / 2).toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}`;
-            const g = `<g class="fg" data-g="${card}"><path d="${d}" fill="none" stroke="${NAVY}" stroke-width="${fw + 4}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${fw}" stroke-linecap="round"/></g>`;
-            if (card != null) {
-                items.push({ k: card, tx, ty, px: pts[card][0], py: pts[card][1], card: cards[card] });
-                strings += `<path class="str" data-s="${card}"/><circle class="knot" data-n="${card}" r="2.6"/>`;
-            }
-            return g;
-        };
-        let fs = "";
-        map.forEach((card, j) => {
-            const bx = X(-pw / 2 + pw * (.13 + .25 * j)), by = palmB - 4;
-            if (card == null) fs += finger(bx, by, bx, palmB + flen * .4, null);
-            else fs += finger(bx, by, lerp(pts[card][0], cx, .5), palmB + flen * lens[j], card);
-        });
-        fs += finger(X(pw / 2 - fw * .3), palmY + ph * .1, lerp(pts[thumb][0], cx, .5), palmB + flen * .6, thumb);
-        const ax = id === "l" ? -40 : cx + pw / 2, aw = id === "l" ? cx - pw / 2 + 40 : W + 40 - (cx + pw / 2);
-        const arm = `<rect x="${ax}" y="${palmY - ph * .4}" width="${aw}" height="${ph * .8}" fill="url(#hp)" stroke="${NAVY}" stroke-width="2.5"/>`;
-        const cuff = `<rect x="${id === "l" ? cx - pw / 2 - 7 : cx + pw / 2 - 2}" y="${palmY - ph * .47}" width="9" height="${ph * .94}" rx="3" fill="${WHITE}" stroke="${NAVY}" stroke-width="2"/>`;
-        const palm = `<rect x="${cx - pw / 2}" y="${palmY - ph / 2}" width="${pw}" height="${ph}" rx="${ph * .35}" fill="${WHITE}" stroke="${NAVY}" stroke-width="2.5"/>`;
-        hands += `<g class="hand ${id}">${arm}${fs}${palm}${cuff}</g>`;
-    });
-    svg.innerHTML = `<defs><pattern id="hp" width="18" height="18" patternUnits="userSpaceOnUse"><rect width="18" height="18" fill="#0d2760"/><path d="M9 0 18 9 9 18 0 9Z" fill="#a9bde0" fill-opacity=".38"/></pattern></defs>${hands}${strings}`;
-    items.forEach(it => { it.g = svg.querySelector(`[data-g="${it.k}"]`); it.s = svg.querySelector(`[data-s="${it.k}"]`); it.n = svg.querySelector(`[data-n="${it.k}"]`); it.n.setAttribute("cx", it.px); });
-    pup = items;
+    pup = FINGERTIPS.map(([fx, fy], k) => ({
+        k, card: cards[k], px: pts[k][0], py: pts[k][1],
+        tx: Z.left - H.left + fx * sc, ty: Z.top - H.top + (fy - HAND_CROP) * sc
+    }));
+    svg.innerHTML = pup.map(it => `<path class="str" data-s="${it.k}"/><circle class="tipdot" cx="${it.tx.toFixed(1)}" cy="${it.ty.toFixed(1)}" r="2.6"/><circle class="knot" data-n="${it.k}" cx="${it.px.toFixed(1)}" r="2.6"/>`).join("");
+    pup.forEach(it => { it.s = svg.querySelector(`[data-s="${it.k}"]`); it.n = svg.querySelector(`[data-n="${it.k}"]`); });
     renderPuppet(0);
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !pupRun) { pupRun = true; requestAnimationFrame(tickPuppet); }
 }
-// jari ikut bergerak mengikuti kartu yang sedang naik-turun
+// ujung tali di kartu ikut naik-turun bersama kartunya; tali sedikit bergoyang
 function renderPuppet(t) {
     if (!pup) return;
     pup.forEach(it => {
         const tr = getComputedStyle(it.card).translate, ty = tr && tr !== "none" ? parseFloat(tr.split(" ")[1]) || 0 : 0;
-        const dy = ty * .7, sx = Math.sin(t / 900 + it.k) * 1.4, sy = it.ty + dy, ey = it.py + ty;
-        it.g.setAttribute("transform", `translate(0 ${dy.toFixed(2)})`);
-        it.s.setAttribute("d", `M${it.tx.toFixed(1)} ${sy.toFixed(1)}Q${((it.tx + it.px) / 2 + sx).toFixed(1)} ${((sy + ey) / 2).toFixed(1)} ${it.px.toFixed(1)} ${ey.toFixed(1)}`);
+        const sx = Math.sin(t / 900 + it.k) * 1.4, ey = it.py + ty;
+        it.s.setAttribute("d", `M${it.tx.toFixed(1)} ${it.ty.toFixed(1)}Q${((it.tx + it.px) / 2 + sx).toFixed(1)} ${((it.ty + ey) / 2).toFixed(1)} ${it.px.toFixed(1)} ${ey.toFixed(1)}`);
         it.n.setAttribute("cy", ey.toFixed(1));
     });
 }

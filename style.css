@@ -1581,3 +1581,42 @@ footer .res {
         animation: none
     }
 }
+
+/* ===== logo bertangan: sembilan tali dari ujung jari ke kartu ===== */
+.hero-in {
+    z-index: auto
+}
+
+.bglogo {
+    display: none
+}
+
+.pz {
+    width: min(100%, 520px);
+    height: auto;
+    aspect-ratio: 1254/920;
+    margin: 0 auto;
+    overflow: hidden
+}
+
+.pz img {
+    display: block;
+    width: 100%;
+    margin-top: -6.38%;
+    mix-blend-mode: lighten
+}
+
+.puppet .tipdot {
+    fill: #f7f8fb;
+    animation: fadeIn .7s 1s both
+}
+
+.puppet.still .tipdot {
+    animation: none
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .puppet .tipdot {
+        animation: none
+    }
+}
