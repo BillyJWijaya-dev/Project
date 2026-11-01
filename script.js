@@ -1,6 +1,6 @@
 const members=[
 {name:"Zen Auladi",role:"Sepuh",bio:"Bukan orang bener, tapi beneran orang.",langs:["PYTHON","PHP"],hobbies:["Ngoding","Mobil","Musik"],photo:"assets/images/Zen.jpeg",card:{rank:"A",suit:"♠"},song:"assets/audio/zenxi.mp3",title:"Bintang 5",artist:"Tenxi"},
-{name:"Billy Jonas Wijaya",role:"Fineshyt",bio:"Aku bukan dipimpin, aku yang memimpin.",langs:["HTML","PYTHON","SQL","JAVASCRIPT"],hobbies:["Game","Menggambar","Baca Buku","Tidur","Musik"],photo:"assets/images/billy.jpeg",card:{rank:"JK",suit:"★"},song:"assets/audio/billy.mp3",title:"Kyouran Hey Kids",artist:"THE ORAL CIGARETTES"},
+{name:"Billy Jonas Wijaya",role:"Fineshyt",bio:"Aku bukan dipimpin, aku yang memimpin.",langs:["HTML","PYTHON","SQL","JAVASCRIPT"],hobbies:["Game","Menggambar","Baca Buku","Tidur","Musik"],photo:"assets/images/billy.jpeg",card:{rank:"JK",suit:"★"},song:"assets/audio/billy.mp3",title:"Know me",artist:"GEMINI"},
 {name:"Pandu Satrio",role:"Master koding jir",bio:"Kejarlah cita-cita, jangan dia yang ngga cinta.",langs:["HTML","PYTHON"],hobbies:["Ngoding","Mobil"],photo:"assets/images/ndu.jpeg",card:{rank:"Q",suit:"♦"},song:"assets/audio/pandu.mp3",title:"Soulmate",artist:"Kahitna"},
 {name:"M. Naufal Ariadiansyah",role:"Ambasius",bio:"A lot has changed, but I'm still here.",langs:["HTML","PYTHON"],hobbies:["Musik","Game"],photo:"assets/images/naufal.jpeg",card:{rank:"J",suit:"♣"},song:"assets/audio/naufall.mp3",title:"Can't Take My Eyes Off You",artist:"Lula Band"},
 {name:"M. Faris Nur Rizqi",role:"Founding Father",bio:"Try To Be Better.",langs:["PYTHON","HTML"],hobbies:["Game","Musik"],photo:"assets/images/faris.jpeg",card:{rank:"10",suit:"♠"},song:"assets/audio/faris.mp3",title:"Whatever",artist:"Oasis"},
@@ -108,7 +108,9 @@ const h1=document.querySelector("h1");setInterval(()=>gl(h1,520),5600);
 var lyTr=true,lyData=[],lyIdx=-1;
 function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
 function renderLyrics(i){
-  var d=(window.LYRICS||{})[members[i].name]||{},L=d.lines||[],box=$("lyr");
+  var d=(window.LYRICS||{})[members[i].name]||{},box=$("lyr");
+  if(d.file&&!d.lines&&!d.loading){d.loading=1;fetch(d.file).then(r=>r.ok?r.text():"").then(t=>{d.lines=parseLy(t);if(cur===i)renderLyrics(i)}).catch(()=>{d.lines=[]})}
+  var L=d.lines||[];
   lyData=L.map(x=>typeof x==="string"?{l:x}:x);lyIdx=-1;
   box.innerHTML=lyData.length?lyData.map((x,k)=>`<p data-k="${k}"><span>${esc(x.l)}</span>${x.ro?`<em class="ro">${esc(x.ro)}</em>`:""}${x.tr?`<em class="tr">${esc(x.tr)}</em>`:""}</p>`).join(""):'<p class="empty mono">lirik belum ditambahkan</p>';
   $("trBtn").hidden=!lyData.some(x=>x.tr);
@@ -127,3 +129,6 @@ au.addEventListener("timeupdate",()=>{
 });
 $("lyr").addEventListener("click",e=>{var p=e.target.closest("p[data-k]");if(!p)return;var t=lyData[+p.dataset.k].t;if(t!=null){au.currentTime=t;unlocked=true;au.play().catch(()=>{})}});
 renderLyrics(cur);
+
+// baca file lirik .txt: satu baris = satu lirik. Format: [mm:ss.xx] lirik | terjemahan | romaji (semua bagian selain lirik opsional); baris berawalan # diabaikan
+function parseLy(t){return t.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&!s.startsWith("#")).map(s=>{var o={},m=s.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*/);if(m){o.t=+m[1]*60+ +m[2];s=s.slice(m[0].length)}var p=s.split(/\s\|\s/);o.l=p[0];if(p[1])o.tr=p[1];if(p[2])o.ro=p[2];return o})}
