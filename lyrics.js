@@ -11,7 +11,7 @@
    Tombol "terjemahan" muncul otomatis kalau ada baris yang punya "tr".
    ============================================================ */
 window.LYRICS = {
-  "Zen Auladi":                  { lines: [ /* { t:0, l:"..." }, */ ] },
+  "Zen Auladi":                  { lines: [{ t:1:23, l:"..." }] },
   "Billy Jonas Wijaya":          { lines: [ ] },
   "Pandu Satrio":                { lines: [ ] },
   "M. Naufal Ariadiansyah":      { lines: [ ] },
