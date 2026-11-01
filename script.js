@@ -31,7 +31,7 @@ function select(i){
   scramble($("pName"),m.name);$("pRole").textContent=m.role;$("pBio").textContent=m.bio;
   $("pLang").innerHTML=m.langs.map(l=>`<li>${l}</li>`).join("");$("pHob").innerHTML=m.hobbies.map(l=>`<li>${l}</li>`).join("");
   $("pSong").textContent=m.title;$("pArt").textContent=m.artist;
-  au.src=m.song;if(unlocked)au.play().catch(()=>{});else au.pause();
+  au.src=m.song;renderLyrics(i);if(unlocked)au.play().catch(()=>{});else au.pause();
   gl($("tilt"));
 }
 $("play").onclick=()=>{unlocked=true;au.paused?au.play().catch(()=>{}):au.pause()};
@@ -103,3 +103,27 @@ async function cycle(){
 }
 cycle();
 const h1=document.querySelector("h1");setInterval(()=>gl(h1,520),5600);
+
+// ===== lirik (data ada di lyrics.js) =====
+var lyTr=true,lyData=[],lyIdx=-1;
+function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
+function renderLyrics(i){
+  var d=(window.LYRICS||{})[members[i].name]||{},L=d.lines||[],box=$("lyr");
+  lyData=L.map(x=>typeof x==="string"?{l:x}:x);lyIdx=-1;
+  box.innerHTML=lyData.length?lyData.map((x,k)=>`<p data-k="${k}"><span>${esc(x.l)}</span>${x.ro?`<em class="ro">${esc(x.ro)}</em>`:""}${x.tr?`<em class="tr">${esc(x.tr)}</em>`:""}</p>`).join(""):'<p class="empty mono">lirik belum ditambahkan</p>';
+  $("trBtn").hidden=!lyData.some(x=>x.tr);
+  box.classList.toggle("notr",lyTr===false);box.scrollTop=0;
+}
+$("lyBtn").onclick=()=>{$("lyr").hidden=!$("lyr").hidden;$("lyBtn").classList.toggle("on",!$("lyr").hidden)};
+$("trBtn").onclick=()=>{lyTr=!lyTr;$("lyr").classList.toggle("notr",!lyTr);$("trBtn").textContent="terjemahan: "+(lyTr?"on":"off")};
+au.addEventListener("timeupdate",()=>{
+  if(!lyData.some(x=>x.t!=null))return;
+  var k=-1;lyData.forEach((x,n)=>{if(x.t!=null&&x.t<=au.currentTime)k=n});
+  if(k===lyIdx)return;lyIdx=k;var box=$("lyr");
+  box.querySelectorAll("p.on").forEach(p=>p.classList.remove("on"));
+  var p=box.querySelector(`p[data-k="${k}"]`);if(!p)return;
+  p.classList.add("on");gl(p,420);
+  if(!box.hidden)box.scrollTo({top:p.offsetTop-box.clientHeight/2+p.clientHeight/2,behavior:"smooth"});
+});
+$("lyr").addEventListener("click",e=>{var p=e.target.closest("p[data-k]");if(!p)return;var t=lyData[+p.dataset.k].t;if(t!=null){au.currentTime=t;unlocked=true;au.play().catch(()=>{})}});
+renderLyrics(cur);

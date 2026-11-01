@@ -6,7 +6,7 @@
 <title>SOLIDARITY — Different Minds, One Connection</title>
 <link rel="icon" href="assets/images/JESTER.jpeg">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <header class="top"><a href="#hero" class="brand"><img src="assets/images/jesterT.jpeg" alt="">SOLIDARITY</a>
@@ -43,6 +43,8 @@
     </div></div>
     <div class="info"><p class="mono" id="pRole"></p><h3 id="pName"></h3><p class="bio" id="pBio"></p>
       <div class="player"><button id="play" aria-label="Putar/jeda">▶</button><div><b id="pSong"></b><span class="mono" id="pArt"></span></div><audio id="au" preload="none"></audio></div>
+      <div class="lytools"><button class="chip" id="lyBtn">♪ lirik</button><button class="chip" id="trBtn" hidden>terjemahan: on</button></div>
+      <div class="lyr" id="lyr" hidden></div>
       <p class="mono hint">klik kartu untuk membalik · panah ← → untuk ganti</p></div>
   </article>
 </div></section>
@@ -61,6 +63,7 @@
 <footer><img src="assets/images/jesterT.jpeg" alt=""><p class="mono">SOLIDARITY · Sistem Informasi · dibuat bareng-bareng</p></footer>
 <div class="lb" id="lb"><img alt=""></div>
 <div id="cur"></div>
-<script src="script.js?v=20"></script>
+<script src="lyrics.js?v=21"></script>
+<script src="script.js?v=21"></script>
 </body>
 </html>

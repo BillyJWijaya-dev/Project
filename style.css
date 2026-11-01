@@ -126,3 +126,16 @@ footer{text-align:center;padding:60px 0;border-top:3px double var(--lav);backgro
 .pip.d{left:50%;top:5%;transform:translateX(-50%);font-size:16px}.pip.e{left:50%;bottom:5%;transform:translateX(-50%) rotate(180deg);font-size:16px}
 .tilt .bk{box-shadow:inset 0 0 0 11px #f4f1ff,inset 0 0 0 14px #2d2a8a;background:repeating-linear-gradient(45deg,#ffffff14 0 3px,transparent 3px 14px),repeating-linear-gradient(-45deg,#ffffff14 0 3px,transparent 3px 14px),radial-gradient(circle,#3a36a8,#0a0824)}
 .tilt .bk>img{border:3px solid var(--lt);box-shadow:0 0 30px var(--lav)}
+
+/* ===== lirik ===== */
+.lytools{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.chip{padding:7px 14px;border-radius:99px;border:1px solid var(--lav);font:700 12px 'JetBrains Mono';letter-spacing:.06em;color:var(--lt);transition:.2s}.chip:hover,.chip.on{background:var(--lav);color:var(--bg)}
+.lyr{max-height:250px;overflow-y:auto;padding:22px 18px;border:1px solid var(--mid);border-radius:14px;background:linear-gradient(#0a0824dd,#12104acc);max-width:460px;scrollbar-width:thin;scrollbar-color:var(--lav) transparent;-webkit-mask:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.lyr[hidden]{display:none}
+.lyr p{margin:0 0 14px;opacity:.45;transition:opacity .3s,text-shadow .3s;line-height:1.4}
+.lyr p[data-k]{cursor:default}.lyr p:hover{opacity:.8}
+.lyr p.on{opacity:1;text-shadow:0 0 18px var(--lav)}
+.lyr p span{display:block;font-size:18px;font-weight:600}
+.lyr em{display:block;font-style:normal;font-size:13px;color:var(--lt);margin-top:2px}
+.lyr em.ro{font:400 12px 'JetBrains Mono';color:var(--mut)}
+.lyr.notr .tr{display:none}.lyr .empty{opacity:.6;text-align:center}
