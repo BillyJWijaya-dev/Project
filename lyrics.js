@@ -12,7 +12,7 @@
    ============================================================ */
 window.LYRICS = {
   "Zen Auladi":                  { lines: [{ t:1:23, l:"..." }] },
-  "Billy Jonas Wijaya":          { lines: [ ] },
+  "Billy Jonas Wijaya":          { lines: "assets/lyrics/billy.txt" },
   "Pandu Satrio":                { lines: [ ] },
   "M. Naufal Ariadiansyah":      { lines: [ ] },
   "M. Faris Nur Rizqi":          { lines: [ ] },
