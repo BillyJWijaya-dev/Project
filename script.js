@@ -60,3 +60,22 @@ function add(src){const im=new Image();im.src=src;im.alt="Foto kebersamaan SOLID
 gallery.forEach(add);
 $("up").onchange=e=>[...e.target.files].forEach(f=>{const r=new FileReader();r.onload=()=>add(r.result);r.readAsDataURL(f)});
 lb.onclick=()=>lb.classList.remove("on");
+// ===== suasana sirkus & kartu remi =====
+const stg=$("stage");
+$("lights").innerHTML=Array.from({length:26},(_,k)=>`<i style="--sag:${Math.round(Math.sin(k/25*Math.PI)*34)}px"></i>`).join("");
+$("suits").innerHTML=Array.from({length:18},(_,k)=>`<span style="left:${(k*5.7+Math.random()*4)%98}%;font-size:${18+Math.random()*34}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;--rot:${(Math.random()*180-90)|0}deg">${"♠♥♦♣"[k%4]}</span>`).join("");
+const rb="♠ SOLIDARITY ♥ DIFFERENT MINDS ♦ ONE CONNECTION ♣ ";
+$("rt").innerHTML=`<span>${rb.repeat(3)}</span><span>${rb.repeat(3)}</span>`;
+addEventListener("pointermove",e=>{
+  document.documentElement.style.setProperty("--mx",e.clientX+"px");document.documentElement.style.setProperty("--my",e.clientY+"px");
+  stg.style.setProperty("--px",((.5-e.clientX/innerWidth)*24).toFixed(1)+"px");stg.style.setProperty("--py",((.5-e.clientY/innerHeight)*14).toFixed(1)+"px");
+});
+$("tilt").addEventListener("pointermove",e=>{const r=$("tilt").getBoundingClientRect();$("pf").style.setProperty("--gx",(e.clientX-r.left)/r.width*100+"%");$("pf").style.setProperty("--gy",(e.clientY-r.top)/r.height*100+"%")});
+// kartu dibagikan saat meja terlihat, elemen muncul bertahap saat scroll
+hand.querySelectorAll("button").forEach((b,i)=>b.style.setProperty("--i",i));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.25});
+io.observe(hand);
+document.querySelectorAll("h2,.prof,.text,.chips,.who").forEach(el=>{el.classList.add("rv");io.observe(el)});
+// foto galeri sedikit miring seperti kartu di meja
+const tiltImg=()=>grid.querySelectorAll("img:not([style*='--r'])").forEach(im=>im.style.setProperty("--r",(Math.random()*6-3).toFixed(1)+"deg"));
+new MutationObserver(tiltImg).observe(grid,{childList:true});tiltImg();
