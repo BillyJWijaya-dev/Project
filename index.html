@@ -1,262 +1,66 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SOLIDARITY — Different Minds, One Connection</title>
-    <link rel="icon" href="assets/images/JESTER.jpeg">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
-    <style>
-        /* cadangan: tirai tetap rapi walau style.css di server masih versi lama */
-        #curtain {
-            position: fixed;
-            inset: 0;
-            z-index: 300;
-            background: #0B1D33
-        }
-
-        #curtain .ck {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 18px
-        }
-
-        #curtain .ck img {
-            width: min(150px, 36vw);
-            height: auto
-        }
-    </style>
-    <link rel="stylesheet" href="style.css?v=13">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOLIDARITY — Different Minds, One Connection</title>
+<link rel="icon" href="assets/images/JESTER.jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
+<body>
+<header class="top"><a href="#hero" class="brand"><img src="assets/images/jesterT.jpeg" alt="">SOLIDARITY</a>
+<nav><a href="#about">tentang</a><a href="#members">anggota</a><a href="#skills">skill</a><a href="#gallery">galeri</a></nav></header>
 
-<body class="wait">
+<section id="hero">
+  <div class="stage" id="stage">
+    <img class="gif" src="assets/images/JESTERGIF.gif" alt="Jester biru dengan tangan terulur" width="1280" height="720">
+    <div class="shade"></div>
+    <div class="title"><p class="mono">sistem informasi · si26a</p><h1>Different Minds,<br><em>One Connection.</em></h1></div>
+    <button class="handcard" id="hc" aria-label="Buka profil anggota">
+      <span class="spin" id="hcSpin">
+        <span class="face fr"><img id="hcImg" alt=""><b id="hcRk"></b></span>
+        <span class="face bk"><img src="assets/images/jesterT.jpeg" alt=""></span>
+      </span>
+    </button>
+    <p class="cap mono" id="hcCap"></p>
+  </div>
+</section>
 
-    <canvas id="fx" aria-hidden="true"></canvas>
+<section id="about"><div class="wrap two">
+  <div><p class="mono tag">♣ tentang</p><h2>Sembilan orang, satu dek.</h2></div>
+  <div class="text"><p>Lingkaran pertemanan mahasiswa Sistem Informasi, berawal dari kelas SI26A dan dibuat pertama kali oleh Faris.</p>
+  <ul><li>Mengerjakan tugas bersama</li><li>Belajar</li><li>Mengenal satu sama lain</li><li>Membangun potensi diri sebagai mahasiswa Sistem Informasi</li></ul>
+  <p>Kami welcome ke semua orang, tergantung bagaimana cara pandang anda kepada pertemanan kami.</p></div>
+</div></section>
 
-    <!-- tirai panggung -->
-    <div id="curtain" role="presentation">
-        <div class="cp l"></div>
-        <div class="cp r"></div>
-        <div class="ck"><img src="assets/images/jesterT.jpeg" alt="">
-            <p class="mono">klik untuk membuka tirai</p>
-        </div>
-    </div>
+<section id="members"><div class="wrap">
+  <p class="mono tag">♠ anggota</p><h2>Pilih kartumu</h2>
+  <div class="hand" id="hand"></div>
+  <article class="prof">
+    <div class="tilt" id="tilt"><div class="flip" id="flip">
+      <div class="face fr" id="pf"><b class="c tl"></b><b class="c br"></b><img id="pImg" alt=""></div>
+      <div class="face bk"><img src="assets/images/jesterT.jpeg" alt=""><p class="mono">bahasa</p><ul class="tags" id="pLang"></ul><p class="mono">hobi</p><ul class="tags alt" id="pHob"></ul></div>
+    </div></div>
+    <div class="info"><p class="mono" id="pRole"></p><h3 id="pName"></h3><p class="bio" id="pBio"></p>
+      <div class="player"><button id="play" aria-label="Putar/jeda">▶</button><div><b id="pSong"></b><span class="mono" id="pArt"></span></div><audio id="au" preload="none"></audio></div>
+      <p class="mono hint">klik kartu untuk membalik · panah ← → untuk ganti</p></div>
+  </article>
+</div></section>
 
-    <header class="top">
-        <a href="#hero" class="brand"><img src="assets/images/jesterT.jpeg" alt="">SOLIDARITY</a>
-        <nav>
-            <a href="#about">tentang</a>
-            <a href="#people">anggota</a>
-            <a href="#fate">takdir</a>
-            <a href="#skills">skill</a>
-            <a href="#gallery">galeri</a>
-        </nav>
-    </header>
+<section id="skills"><div class="wrap">
+  <p class="mono tag red">♦ skill</p><h2>Siapa bisa apa</h2>
+  <div class="chips" id="chips"></div><div class="who" id="who"></div>
+</div></section>
 
-    <section id="hero">
-        <div class="glyphs" aria-hidden="true"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></div>
-        <div class="hero-in">
-            <p class="mark" id="mark" role="img" aria-label="SOLIDARITY">
-                <span aria-hidden="true">SOLID</span>
-                <img src="assets/images/jesterT.jpeg" alt="">
-                <span aria-hidden="true">ARITY</span>
-            </p>
+<section id="gallery"><div class="wrap">
+  <p class="mono tag red">♥ galeri</p>
+  <div class="row"><h2>Momen kami</h2><label class="btn" for="up">+ Upload foto</label><input id="up" type="file" accept="image/*" multiple hidden></div>
+  <div class="grid" id="grid"></div>
+</div></section>
 
-            <!-- maskot + kartu anggota berputar di atas telapak tangan kanannya -->
-            <div class="scene" id="scene">
-                <div class="rig">
-                    <img class="mascot" id="mascot" src="assets/images/jesterG.png" width="1672" height="941"
-                        alt="Maskot SOLIDARITY: badut jester yang menengadahkan telapak tangan kanannya">
-                    <div class="fade" aria-hidden="true"></div>
-                    <div class="beam" aria-hidden="true"></div>
-                    <div class="halo" aria-hidden="true"></div>
-                    <div class="sparks" aria-hidden="true">
-                        <i class="spark" style="--j:0;--dx:-.55">♠</i><i class="spark" style="--j:1;--dx:.4">♦</i>
-                        <i class="spark" style="--j:2;--dx:-.15">♥</i><i class="spark" style="--j:3;--dx:.65">♣</i>
-                        <i class="spark" style="--j:4;--dx:-.7">♦</i><i class="spark" style="--j:5;--dx:.1">♠</i>
-                    </div>
-                    <div class="orbit" id="orbit">
-                        <div class="ring">
-                            <div class="disc"></div>
-                            <div class="spin" id="spin"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <h1>Different Minds,<br>One Connection.</h1>
-
-            <div class="marq" aria-hidden="true">
-                <div class="track" id="track"></div>
-            </div>
-            <p class="stats" id="stats"></p>
-        </div>
-    </section>
-
-    <section id="about">
-        <div class="wrap two">
-            <div>
-                <p class="mono tbl"><span class="sx">♣</span>tentang</p>
-                <h2>Cuma sekumpulan sembilan orang.</h2>
-            </div>
-            <div class="readme">
-                <div class="bar"><i></i><i></i><i></i><span>README.md</span></div>
-                <div class="body">
-                    <p class="h"># SOLIDARITY</p>
-                    <p class="q">&gt; Different Minds, One Connection.</p>
-
-                    <p class="h">## Apa ini?</p>
-                    <p>Lingkaran pertemanan mahasiswa Sistem Informasi. Berawal dari kelas SI26A, dibuat pertama kali
-                        oleh
-                        Faris.</p>
-
-                    <p class="h">## Tujuan</p>
-                    <ul>
-                        <li>mengerjakan tugas bersama</li>
-                        <li>belajar</li>
-                        <li>mengenal satu sama lain</li>
-                        <li>membangun potensi diri sebagai mahasiswa Sistem Informasi</li>
-                    </ul>
-
-                    <p class="h">## Isi repositori</p>
-                    <p>Di sini kami simpan siapa kami, apa yang kami suka, dan foto-foto yang pantas dikenang.</p>
-
-                    <p class="h">## Cara pakai</p>
-                    <p>Baca pelan-pelan, tertawa seperlunya.</p>
-
-                    <p class="h">## Kontribusi</p>
-                    <p>Kami welcome ke semua orang, tergantung bagaimana cara pandang anda kepada pertemanan kami.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="people">
-        <img class="dock" id="dock" src="assets/images/jesterT.jpeg" alt="Logo SOLIDARITY" title="Putar ulang intro">
-        <div class="wrap">
-            <p class="mono tbl" id="lbPeople"><span class="sx">♠</span>anggota</p>
-            <div class="people-head">
-                <h2>Anggota</h2>
-                <div class="ctrl">
-                    <button id="prev" aria-label="Sebelumnya">←</button>
-                    <span class="mono" id="count">1 / 1</span>
-                    <button id="next" aria-label="Berikutnya">→</button>
-                </div>
-            </div>
-
-            <div class="hand-wrap">
-                <div class="hand" id="hand"></div>
-                <button class="btn small" id="draw">↻ Tarik kartu acak</button>
-            </div>
-
-            <article class="card" id="card">
-                <div class="stage">
-                    <div class="pcard" id="pcard" tabindex="0" role="button" aria-label="Balik kartu">
-                        <div class="pflip" id="pflip">
-                            <div class="face front">
-                                <span class="corner tl"><b class="rk"></b><i class="st"></i></span>
-                                <span class="corner br"><b class="rk"></b><i class="st"></i></span>
-                                <span class="pmark" id="pmark"></span>
-                                <div class="pframe" id="pframe"><img id="mPhoto" alt=""></div>
-                            </div>
-                            <div class="face back">
-                                <img class="blogo" src="assets/images/jesterT.jpeg" alt="">
-                                <p class="mono">bahasa pemrograman</p>
-                                <ul class="tags" id="mLang"></ul>
-                                <p class="mono">hobi</p>
-                                <ul class="tags alt" id="mHobby"></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="hint mono">klik kartu untuk membalik</p>
-                </div>
-                <div class="info">
-                    <h3 id="mName"></h3>
-                    <p class="role mono" id="mRole"></p>
-                    <p id="mBio"></p>
-
-                    <div class="player">
-                        <button id="playBtn" aria-label="Putar/jeda">▶</button>
-                        <div><b id="mSong"></b><span class="mono" id="mArtist"></span></div>
-                        <audio id="audio" preload="none"></audio>
-                    </div>
-                    <p class="note mono" id="note">klik di mana saja sekali supaya lagu bisa otomatis diputar</p>
-                </div>
-            </article>
-            <div class="dots" id="dots"></div>
-        </div>
-    </section>
-
-    <section id="fate">
-        <div class="wrap">
-            <p class="mono tbl"><span class="sx">&#9829;</span>takdir</p>
-            <h2>Choose Your Fate</h2>
-            <p class="lead">Pilih satu kartu, jangan kelamaan mikir.</p>
-            <div class="fate-row" id="fateRow"></div>
-            <div class="fate-msg" id="fateMsg" aria-live="polite">
-                <p class="mono">belum ada kartu terpilih</p>
-            </div>
-            <button class="btn small" id="fateReset">&#8635; Kocok ulang</button>
-        </div>
-    </section>
-
-    <section id="skills">
-        <div class="wrap">
-            <p class="mono tbl" id="lbSkills"><span class="sx red">♦</span>skill</p>
-            <h2>Dinding skill</h2>
-            <p class="lead">Hubungan antara anggota dan bahasa pemrograman yang dikuasai, seperti diagram relasi. Klik
-                anggota atau bahasa untuk menyalakan garisnya.</p>
-            <div class="erd" id="erd">
-                <svg class="links" id="links" aria-hidden="true"></svg>
-                <div class="col" id="colM">
-                    <h4 class="mono">anggota</h4>
-                </div>
-                <div class="col" id="colL">
-                    <h4 class="mono">bahasa</h4>
-                </div>
-            </div>
-            <div class="who" id="who"></div>
-        </div>
-    </section>
-
-    <section id="gallery">
-        <div class="wrap">
-            <p class="mono tbl"><span class="sx red">♥</span>galeri</p>
-            <div class="people-head">
-                <h2>Momen kami</h2>
-                <label class="btn" for="upload">+ Upload foto</label>
-                <input type="file" id="upload" accept="image/*" multiple hidden>
-            </div>
-            <div class="grid" id="grid"></div>
-        </div>
-    </section>
-
-    <footer>
-        <img src="assets/images/jesterT.jpeg" alt="">
-        <p class="mono sql"><b>SELECT</b> * <b>FROM</b> dek <b>WHERE</b> kartu = 'Joker';</p>
-        <p class="mono res">→ 1 row returned · SOLIDARITY · Sistem Informasi · dibuat bareng-bareng</p>
-    </footer>
-
-    <button class="belltoggle mono" id="bell" aria-label="Nyalakan atau matikan suara lonceng">lonceng: on</button>
-
-    <div class="lightbox" id="lb"><img alt=""></div>
-    <div id="intro" aria-hidden="true"><img src="assets/images/jesterT.jpeg" alt=""></div>
-    <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
-    <script src="script.js?v=13"></script>
-    <script>
-        /* jaring pengaman: kalau script.js gagal/telat/cache lama, tirai tetap hilang */
-        setTimeout(function () {
-            var c = document.getElementById("curtain");
-            if (c) { c.style.transition = "opacity .5s"; c.style.opacity = "0"; c.style.pointerEvents = "none"; setTimeout(function () { c.remove(); document.body.classList.remove("wait"); document.body.style.overflow = ""; }, 600); }
-        }, 6000);
-    </script>
+<footer><img src="assets/images/jesterT.jpeg" alt=""><p class="mono">SOLIDARITY · Sistem Informasi · dibuat bareng-bareng</p></footer>
+<div class="lb" id="lb"><img alt=""></div>
+<script src="script.js?v=20"></script>
 </body>
-
 </html>
