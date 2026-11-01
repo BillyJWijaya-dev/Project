@@ -13,13 +13,12 @@ const red=m=>"♥♦".includes(m.card.suit),fb=i=>{i.onerror=()=>{i.onerror=null
 let cur=0,unlocked=false;const au=$("au");
 // kartu di tangan jester: berputar terus, ganti anggota di sisi belakang
 let hi=0;const hcSpin=$("hcSpin");
-function setHand(i){const m=members[i];$("hcImg").src=m.photo;fb($("hcImg"));$("hcRk").textContent=m.card.rank+m.card.suit;$("hcCap").textContent=m.name}
+function setHand(i){const m=members[i];$("hcImg").src=m.photo;fb($("hcImg"));$("hcRk").innerHTML=m.card.rank+"<br>"+m.card.suit;$("hcFace").classList.toggle("red",red(m));$("hcCap").textContent="> "+m.name}
 setHand(0);
-hcSpin.addEventListener("animationiteration",()=>setTimeout(()=>{hi=(hi+1)%members.length;setHand(hi)},1800));
 $("hc").onclick=()=>{select(hi);$("members").scrollIntoView({behavior:"smooth"})};
 // deretan kartu
 const hand=$("hand"),n=members.length;
-hand.innerHTML=members.map((m,i)=>`<button data-i="${i}" style="--a:${((i-(n-1)/2)*6).toFixed(1)}deg" aria-label="${m.name}"><img src="${m.photo}" alt=""></button>`).join("");
+hand.innerHTML=members.map((m,i)=>`<button data-i="${i}" style="--a:${((i-(n-1)/2)*6).toFixed(1)}deg" aria-label="${m.name}"><span class="ix${red(m)?" red":""}">${m.card.rank}<br>${m.card.suit}</span><img src="${m.photo}" alt=""></button>`).join("");
 hand.querySelectorAll("img").forEach(fb);
 hand.onclick=e=>{const b=e.target.closest("button");if(b)select(+b.dataset.i)};
 function select(i){
@@ -28,12 +27,12 @@ function select(i){
   $("flip").classList.remove("on");
   $("pImg").src=m.photo;$("pImg").alt=m.name;fb($("pImg"));
   $("pf").classList.toggle("red",red(m));
-  document.querySelectorAll(".c").forEach(c=>c.textContent=m.card.rank+m.card.suit);
-  $("pName").textContent=m.name;$("pRole").textContent=m.role;$("pBio").textContent=m.bio;
+  document.querySelectorAll(".c").forEach(c=>c.innerHTML=m.card.rank+"<i>"+m.card.suit+"</i>");document.querySelectorAll(".pip").forEach(p=>p.textContent=m.card.suit);
+  scramble($("pName"),m.name);$("pRole").textContent=m.role;$("pBio").textContent=m.bio;
   $("pLang").innerHTML=m.langs.map(l=>`<li>${l}</li>`).join("");$("pHob").innerHTML=m.hobbies.map(l=>`<li>${l}</li>`).join("");
   $("pSong").textContent=m.title;$("pArt").textContent=m.artist;
   au.src=m.song;if(unlocked)au.play().catch(()=>{});else au.pause();
-  $("tilt").animate([{transform:"rotateY(-90deg) scale(.9)"},{transform:"none"}],{duration:500,easing:"ease-out"});
+  gl($("tilt"));
 }
 $("play").onclick=()=>{unlocked=true;au.paused?au.play().catch(()=>{}):au.pause()};
 au.onplay=()=>$("play").textContent="❚❚";au.onpause=()=>$("play").textContent="▶";
@@ -79,3 +78,28 @@ document.querySelectorAll("h2,.prof,.text,.chips,.who").forEach(el=>{el.classLis
 // foto galeri sedikit miring seperti kartu di meja
 const tiltImg=()=>grid.querySelectorAll("img:not([style*='--r'])").forEach(im=>im.style.setProperty("--r",(Math.random()*6-3).toFixed(1)+"deg"));
 new MutationObserver(tiltImg).observe(grid,{childList:true});tiltImg();
+
+// ===== glitch ala terminal + transisi kartu di tangan jester =====
+function gl(el,ms=560){el.classList.remove("gl");void el.offsetWidth;el.classList.add("gl");setTimeout(()=>el.classList.remove("gl"),ms)}
+const CH="01<>/\\|#$%&@";
+function scramble(el,txt){let f=0;const t=setInterval(()=>{f++;el.textContent=[...txt].map((c,k)=>c===" "||k<f*txt.length/14?c:CH[Math.random()*CH.length|0]).join("");if(f>=14){clearInterval(t);el.textContent=txt}},32)}
+const fly=$("fly"),RM=matchMedia("(prefers-reduced-motion: reduce)").matches,wait=ms=>new Promise(r=>setTimeout(r,ms));
+function burst(){const s=stg.getBoundingClientRect(),r=$("hc").getBoundingClientRect();
+  for(let k=0;k<10;k++){const e=document.createElement("span");e.className="bst";e.textContent="♠♥♦♣"[k%4];
+    e.style.left=r.left-s.left+r.width/2+"px";e.style.top=r.top-s.top+r.height/2+"px";stg.append(e);
+    const a=k/10*6.28,d=70+Math.random()*90;
+    e.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:1},{transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d-50}px)) rotate(${Math.random()*360}deg) scale(.4)`,opacity:0}],{duration:900,easing:"ease-out"}).onfinish=()=>e.remove()}}
+async function cycle(){
+  if(RM)return;
+  for(;;){
+    await wait(4300);
+    gl(fly);burst();
+    const a1=fly.animate([{transform:"none",opacity:1},{transform:"translateY(-80%) rotate(20deg) scale(.5)",opacity:0}],{duration:720,easing:"cubic-bezier(.5,0,.9,.4)",fill:"forwards"});
+    await a1.finished;
+    hi=(hi+1)%members.length;setHand(hi);scramble($("hcCap"),"> "+members[hi].name);gl(fly);
+    const a2=fly.animate([{transform:"translateY(50%) scale(.2)",opacity:0},{transform:"none",opacity:1}],{duration:850,easing:"cubic-bezier(.2,.9,.3,1.3)",fill:"forwards"});
+    a1.cancel();await a2.finished;a2.cancel();
+  }
+}
+cycle();
+const h1=document.querySelector("h1");setInterval(()=>gl(h1,520),5600);

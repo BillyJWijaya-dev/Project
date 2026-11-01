@@ -87,3 +87,42 @@ h1 em{font-style:normal;color:var(--lt)}
 footer{text-align:center;padding:60px 0;border-top:3px double var(--lav);background:repeating-linear-gradient(90deg,#12104a 0 48px,#0a0824 48px 96px)}footer img{width:60px;margin:0 auto 14px;border-radius:50%;border:2px solid var(--lt)}
 @media(max-width:800px){.ticket,.prof{grid-template-columns:1fr}.title{max-width:60%}nav a:nth-child(n+3){display:none}.hand button{width:56px;margin-left:-20px}.hand{height:110px}.stage{aspect-ratio:4/3}.handcard{width:20%;left:70%}.cap{display:none}.spot{width:50%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}.hand button,.rv{opacity:1;transform:none}}
+
+/* ===== v3: tangan terlihat, kartu remi asli, glitch ===== */
+.shade{background:linear-gradient(90deg,#0a0824d9,#0a082400 52%),linear-gradient(#0a0824aa,#0a082400 22%),radial-gradient(ellipse 55% 45% at 12% 100%,#0a0824f2,#0a082400)}
+.stage::after{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 2px,#0000002a 2px 3px)}
+.gif{object-position:70% 100%}
+.ribbon{margin:34px 0 -8px;transform:rotate(.7deg) scale(1.03)}
+.handcard{top:83%;perspective:none}
+.fly{position:absolute;inset:0;display:block;perspective:900px}
+.handcard::after{content:"";position:absolute;left:50%;bottom:-16%;width:170%;height:26%;transform:translateX(-50%);background:radial-gradient(ellipse,#d5d0ffcc,#7f78d900 70%);filter:blur(5px);z-index:-1}
+.cap{left:73.5%;top:40%;font-size:clamp(9px,1.05vw,13px)}
+.bst{position:absolute;z-index:5;color:var(--lt);font-size:22px;pointer-events:none;text-shadow:0 0 12px var(--lav)}
+.boot{margin-top:18px;color:var(--lt)}.blink{animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+.face.fr{--ci:#14104a;background:linear-gradient(160deg,#fbfaff,#dcd7fa);border:1px solid #fff}.face.fr.red{--ci:#c0305a}
+.face.fr img{position:absolute;left:13%;top:15%;width:74%;height:70%;border-radius:6%;border:2px solid var(--ci);object-fit:cover}
+.face.fr b{color:var(--ci);text-shadow:none;line-height:.95;text-align:center;left:5%;top:3%;font-size:clamp(9px,1.3vw,18px)}
+.gl{animation:gl .55s steps(2,end)}h2:hover{animation:gl .55s steps(2,end)}
+@keyframes gl{0%{transform:translate(0);filter:none;clip-path:inset(0)}
+15%{transform:translate(-4px,2px);filter:drop-shadow(4px 0 #6ff) drop-shadow(-4px 0 #f6a);clip-path:inset(10% 0 58% 0)}
+30%{transform:translate(5px,-2px);filter:hue-rotate(40deg) drop-shadow(-5px 0 #6ff);clip-path:inset(55% 0 12% 0)}
+45%{transform:translate(-3px,0);filter:drop-shadow(3px 0 #f6a) brightness(1.7);clip-path:inset(0)}
+60%{transform:translate(4px,1px) skewX(8deg);filter:drop-shadow(-4px 0 #6ff);clip-path:inset(30% 0 40% 0)}
+80%{transform:translate(-2px,0) skewX(-6deg);clip-path:inset(0)}
+100%{transform:none;filter:none;clip-path:inset(0)}}
+/* kipas kartu mini */
+.hand button{position:relative;background:linear-gradient(160deg,#fbfaff,#d5d0f8);border:1px solid #fff;color:#14104a}
+.hand button img{position:absolute;left:14%;top:19%;width:72%;height:62%;border-radius:4px;border:1px solid #14104a}
+.ix{position:absolute;left:5px;top:3px;font:800 11px/1 Archivo;text-align:center;color:#14104a}.ix.red{color:#c0305a}
+/* kartu profil besar: kartu remi */
+.tilt .face{border:1px solid #fff;border-radius:18px}
+.tilt .fr{--ci:#14104a;background:linear-gradient(160deg,#fcfbff,#ddd8fa)}.tilt .fr.red{--ci:#c0305a}
+.tilt .fr::before{inset:8px;border:1.5px solid var(--ci);border-radius:12px;opacity:.45}
+.tilt .fr::after{background:radial-gradient(circle at var(--gx,50%) var(--gy,25%),#fff9,transparent 45%),linear-gradient(115deg,transparent 30%,#7f78d944 44%,#66ffff33 50%,#ff66aa33 56%,transparent 70%);mix-blend-mode:soft-light}
+.tilt .fr img{position:absolute;left:14%;top:15%;width:72%;height:70%;border-radius:10px;border:2px solid var(--ci);object-fit:cover;box-shadow:0 4px 14px #0004}
+.tilt .c{color:var(--ci);text-shadow:none;font-size:32px;line-height:.95;top:16px;left:18px}.tilt .c.br{top:auto;left:auto;bottom:16px;right:18px}.tilt .c i{display:block;font-style:normal;font-size:26px}
+.pip{position:absolute;z-index:2;font-style:normal;color:var(--ci);font-size:20px;line-height:1}
+.pip.a{left:5%;top:50%;transform:translateY(-50%)}.pip.b{right:5%;top:50%;transform:translateY(-50%) rotate(180deg)}
+.pip.d{left:50%;top:5%;transform:translateX(-50%);font-size:16px}.pip.e{left:50%;bottom:5%;transform:translateX(-50%) rotate(180deg);font-size:16px}
+.tilt .bk{box-shadow:inset 0 0 0 11px #f4f1ff,inset 0 0 0 14px #2d2a8a;background:repeating-linear-gradient(45deg,#ffffff14 0 3px,transparent 3px 14px),repeating-linear-gradient(-45deg,#ffffff14 0 3px,transparent 3px 14px),radial-gradient(circle,#3a36a8,#0a0824)}
+.tilt .bk>img{border:3px solid var(--lt);box-shadow:0 0 30px var(--lav)}
