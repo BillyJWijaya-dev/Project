@@ -33,7 +33,7 @@
             height: auto
         }
     </style>
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=13">
 </head>
 
 <body class="wait">
@@ -63,18 +63,35 @@
     <section id="hero">
         <div class="glyphs" aria-hidden="true"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></div>
         <div class="hero-in">
-            <svg class="cable" id="cable" aria-hidden="true"></svg>
             <p class="mark" id="mark" role="img" aria-label="SOLIDARITY">
                 <span aria-hidden="true">SOLID</span>
                 <img src="assets/images/jesterT.jpeg" alt="">
                 <span aria-hidden="true">ARITY</span>
             </p>
 
-            <img class="jester" id="jester" src="assets/images/jesterL.png" alt="" width="800" height="676">
+            <!-- maskot + kartu anggota berputar di atas telapak tangan kanannya -->
+            <div class="scene" id="scene">
+                <div class="rig">
+                    <img class="mascot" id="mascot" src="assets/images/jesterG.jpg" width="1672" height="941"
+                        alt="Maskot SOLIDARITY: badut jester yang menengadahkan telapak tangan kanannya">
+                    <div class="fade" aria-hidden="true"></div>
+                    <div class="beam" aria-hidden="true"></div>
+                    <div class="halo" aria-hidden="true"></div>
+                    <div class="sparks" aria-hidden="true">
+                        <i class="spark" style="--j:0;--dx:-.55">♠</i><i class="spark" style="--j:1;--dx:.4">♦</i>
+                        <i class="spark" style="--j:2;--dx:-.15">♥</i><i class="spark" style="--j:3;--dx:.65">♣</i>
+                        <i class="spark" style="--j:4;--dx:-.7">♦</i><i class="spark" style="--j:5;--dx:.1">♠</i>
+                    </div>
+                    <div class="orbit" id="orbit">
+                        <div class="ring">
+                            <div class="disc"></div>
+                            <div class="spin" id="spin"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="deal" id="deal"></div>
-
-            <h1>We Laugh,<br>We Rule.</h1>
+            <h1>Different Minds,<br>One Connection.</h1>
 
             <div class="marq" aria-hidden="true">
                 <div class="track" id="track"></div>
@@ -232,7 +249,7 @@
     <div class="lightbox" id="lb"><img alt=""></div>
     <div id="intro" aria-hidden="true"><img src="assets/images/jesterT.jpeg" alt=""></div>
     <audio id="introSnd" src="assets/audio/AHA.mp3" preload="auto"></audio>
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=13"></script>
     <script>
         /* jaring pengaman: kalau script.js gagal/telat/cache lama, tirai tetap hilang */
         setTimeout(function () {

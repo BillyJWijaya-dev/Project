@@ -116,7 +116,7 @@ const EASTER_IMAGE = "assets/images/easter.jpeg";
 
 const $ = id => document.getElementById(id);
 
-// --- Hero: kartu dibagikan + poster ---
+// --- Hero: maskot + kartu berputar + poster ---
 // Bahasa unik dihitung sekali, dipakai hero dan dinding skill
 const skillMap = new Map();
 members.forEach((m, i) => m.langs.forEach(l => {
@@ -128,12 +128,31 @@ members.forEach((m, i) => m.langs.forEach(l => {
 (() => {
     const n = members.length, suits = ["♠", "♥", "♦", "♣"];
 
-    // --t: posisi dari tengah, --d: urutan dibagi (kartu paling atas duluan)
-    $("deal").innerHTML = members.map((m, i) =>
-        `<button class="dcard${"♥♦".includes(m.card.suit) ? " red" : ""}" data-i="${i}" style="--i:${i};--d:${n - 1 - i};--t:${(i - (n - 1) / 2).toFixed(1)}" aria-label="Lihat profil ${m.name}">` +
-        `<span class="dflip"><span class="dfront"><img src="${m.photo}" alt="" onerror="this.onerror=null;this.src='${LOGO}'"><span class="hc">${m.card.rank}${m.card.suit}</span></span>` +
-        `<span class="dback"><img src="${LOGO}" alt=""></span></span></button>`).join("");
-    $("deal").onclick = e => { const b = e.target.closest(".dcard"); if (b) jumpTo(+b.dataset.i); };
+    // 9 kartu anggota di ring; --k = urutan (tiap kartu 40° dari tetangganya)
+    $("spin").innerHTML = members.map((m, i) =>
+        `<button class="oc${"♥♦".includes(m.card.suit) ? " red" : ""}" data-i="${i}" style="--k:${i}" aria-label="Lihat profil ${m.name}">` +
+        `<span class="dfront"><img src="${m.photo}" alt="" onerror="this.onerror=null;this.src='${LOGO}'"><span class="hc">${m.card.rank}${m.card.suit}</span></span>` +
+        `<span class="dback"><img src="${LOGO}" alt=""></span></button>`).join("");
+    $("spin").onclick = e => { const b = e.target.closest(".oc"); if (b) jumpTo(+b.dataset.i); };
+
+    // gambar maskot memenuhi panggung, lalu ring dipasang persis di atas telapak tangannya
+    // (koordinat dalam piksel jesterG: pusat ring dan titik telapak tangan kanan)
+    const IMG = { w: 1672, h: 941, ring: { x: 1190, y: 610 }, palm: { x: 1187, y: 778 } };
+    const sc = $("scene"), mascot = $("mascot");
+    const layout = () => {
+        const bw = sc.clientWidth, bh = sc.clientHeight, narrow = bw < 700;
+        const s = Math.max(bw / IMG.w, bh / IMG.h, narrow ? bw / 760 : 0); // HP: perbesar supaya tangan & kartu terbaca
+        const fit = (want, size, box) => Math.min(0, Math.max(box - size, want)); // gambar tidak boleh bocor di tepi
+        const left = fit((narrow ? .72 : .71) * bw - IMG.ring.x * s, IMG.w * s, bw);
+        const top = fit(.6 * bh - IMG.ring.y * s, IMG.h * s, bh);
+        Object.assign(mascot.style, { width: IMG.w * s + "px", height: IMG.h * s + "px", left: left + "px", top: top + "px" });
+        const v = (k, x) => sc.style.setProperty(k, x + "px");
+        v("--rx", left + IMG.ring.x * s); v("--ry", top + IMG.ring.y * s);
+        v("--hx", left + IMG.palm.x * s); v("--hy", top + IMG.palm.y * s);
+        v("--cw", 92 * s); v("--R", 190 * s);
+    };
+    layout();
+    if (window.ResizeObserver) new ResizeObserver(layout).observe(sc); else addEventListener("resize", layout);
 
     // pita berjalan: bahasa terbanyak dulu, diulang 3x lalu digandakan agar loop mulus
     const langs = [...skillMap.values()].sort((a, b) => b.who.length - a.who.length).map(s => s.name);
@@ -162,9 +181,8 @@ members.forEach((m, i) => m.langs.forEach(l => {
     const mark = $("mark");
     const fit = () => {
         mark.style.fontSize = "100px";
-        const P = Math.min(mark.parentElement.clientWidth * .92, 640); // lebar tulisan = acuan ukuran seluruh hero
+        const P = Math.min(mark.parentElement.clientWidth * .92, 900); // lebar tulisan SOLIDARITY
         mark.style.fontSize = 100 * P / mark.getBoundingClientRect().width + "px";
-        mark.closest("#hero").style.setProperty("--P", P + "px");
     };
     fit(); addEventListener("resize", fit);
     if (document.fonts) document.fonts.ready.then(fit);
@@ -406,7 +424,7 @@ $("lbSkills").insertAdjacentHTML("beforeend", `<em>${skillMap.size} rows</em>`);
     }
     let n = 0, timer;
     document.addEventListener("click", e => {
-        if (!e.target.closest(".mark img, .jester, .brand img, footer img")) return;
+        if (!e.target.closest(".mark img, .brand img, footer img")) return;
         n++; clearTimeout(timer); timer = setTimeout(() => n = 0, 2500);
         if (n < 10 || document.querySelector(".wild")) return;
         n = 0;
@@ -445,33 +463,6 @@ $("bell").onclick = () => {
     ding();
 };
 $("pcard").addEventListener("click", () => ding());
-
-// --- Kabel dari ujung jari logo jester ke kartu yang dibagikan ---
-// titik ujung jari di jesterL.png (pecahan lebar, pecahan tinggi), urut kiri → kanan
-const FINGERTIPS = [[.038, .872], [.195, .889], [.270, .832], [.400, .824], [.496, .702], [.618, .839], [.743, .861], [.826, .896], [.965, .879]];
-function drawCable(still) {
-    const hi = document.querySelector(".hero-in"), cab = $("cable"), logo = $("jester"), deal = $("deal");
-    const H = hi.getBoundingClientRect(), L = logo.getBoundingClientRect(), D = deal.getBoundingClientRect();
-    cab.classList.toggle("still", !!still);
-    cab.setAttribute("viewBox", `0 0 ${H.width} ${H.height}`);
-    // posisi ujung atas tiap kartu dihitung dari rumus kipas (tidak bergantung animasi)
-    const pts = [...deal.querySelectorAll(".dcard")].map(c => {
-        const w = c.offsetWidth, t = parseFloat(c.style.getPropertyValue("--t")), a = t * 8 * Math.PI / 180;
-        const cx = D.left + D.width / 2 + t * w * .55 - H.left, cy = D.top + D.height / 2 + (t * t * .045 - .3) * w - H.top;
-        return [cx + .7 * w * Math.sin(a), cy - .7 * w * Math.cos(a) - 10];
-    });
-    cab.innerHTML = pts.map(([x, y], k) => {
-        const [fx, fy] = FINGERTIPS[Math.round(k * (FINGERTIPS.length - 1) / Math.max(1, pts.length - 1))];
-        const x0 = L.left + fx * L.width - H.left, y0 = L.top + fy * L.height - H.top;
-        return `<path pathLength="1" d="M${x0} ${y0}L${x} ${y}" style="animation-delay:${(.15 + k * .08).toFixed(2)}s"/>` +
-            `<circle cx="${x0}" cy="${y0}" r="2.5" style="animation-delay:${(.1 + k * .08).toFixed(2)}s"/>` +
-            `<circle cx="${x}" cy="${y}" r="3" style="animation-delay:${(1 + k * .08).toFixed(2)}s"/>`;
-    }).join("");
-}
-// kalau gambar baru selesai dimuat setelah kabel digambar, gambar ulang supaya pas
-$("jester").addEventListener("load", () => { if ($("cable").childElementCount) drawCable($("cable").classList.contains("still")); });
-let cableTimer;
-addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTimeout(() => requestAnimationFrame(() => drawCable(true)), 150); });
 
 // --- Choose Your Fate: pilih satu kartu tertutup, dapat pesan misterius ---
 (() => {
@@ -568,7 +559,6 @@ addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTim
         curtainSnd.currentTime = 0;
         curtainSnd.play().catch(bellFallback);
     }
-    const startHero = delay => setTimeout(() => requestAnimationFrame(() => drawCable(false)), delay);
     if (reduced) k.classList.add("calm");
     body.style.overflow = "hidden";
     let done = false;
@@ -576,7 +566,6 @@ addEventListener("resize", () => { clearTimeout(cableTimer); cableTimer = setTim
         if (done) return; done = true;
         k.classList.add("open"); body.classList.remove("wait");
         playCurtain();
-        startHero(2600);
         setTimeout(() => { k.remove(); body.style.overflow = ""; }, reduced ? 700 : 1700);
     };
     k.addEventListener("click", open);
